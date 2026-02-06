@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi Perfil - SofiShop</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #20B997;
+      --secondary: #0B5345;
+      --accent: #C3FAE8;
+      --text: #2c2c2c;
+      --light-bg: #F1F8F6;
+      --border: #A8E6D5;
+      --shadow: 0 8px 32px rgba(32, 185, 151, 0.12);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--light-bg);
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+    }
+
+    .navbar {
+      background: white;
+      padding: 18px 40px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .logo {
+      font-size: 1.8em;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, #d46a99 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .navbar-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn-logout {
+      background: #f5f5f5;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .nav-btn-logout:hover {
+      background: var(--accent);
+      border-color: var(--primary);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .perfil-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    /* TARJETA DE PERFIL */
+    .tarjeta-perfil {
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+
+    .perfil-header {
+      background: linear-gradient(135deg, var(--primary) 0%, #d46a99 100%);
+      padding: 30px 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5em;
+      margin: 0 auto 15px;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .perfil-nombre {
+      font-size: 1.5em;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .perfil-rol {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .perfil-body {
+      padding: 25px;
+    }
+
+    .perfil-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .perfil-info-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .perfil-info-label {
+      font-size: 0.85em;
+      color: #999;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .perfil-info-valor {
+      font-size: 0.95em;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .perfil-acciones {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 15px;
+      margin-top: 15px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn-primario {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primario:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    .btn-secundario {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secundario:hover {
+      background: var(--accent);
+      border-color: var(--primary);
+    }
+
+    .btn-logout {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-logout:hover {
+      background: #ff5252;
+    }
+
+    /* CONTENIDO PRINCIPAL */
+    .contenido-principal {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .seccion {
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      padding: 25px;
+    }
+
+    .seccion-titulo {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-grupo {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .form-grupo:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 0.9em;
+      color: var(--secondary);
+    }
+
+    .form-input {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95em;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(32, 185, 151, 0.1);
+    }
+
+    .form-input:disabled {
+      background: var(--light-bg);
+      cursor: not-allowed;
+    }
+
+    .form-botones {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pedidos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .pedido-mini-card {
+      background: var(--light-bg);
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pedido-mini-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pedido-mini-numero {
+      font-size: 0.85em;
+      color: #999;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .pedido-mini-estado {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .estado-pendiente {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .estado-completado {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .estado-cancelado {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .btn-ver-factura, .btn-detalles-pedido {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-ver-factura {
+      background: var(--primary);
+      color: white;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .btn-ver-factura:hover {
+      background: var(--secondary);
+      transform: translateY(-1px);
+    }
+
+    .btn-detalles-pedido {
+      background: white;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+      flex: 1;
+      justify-content: center;
+    }
+
+    .btn-detalles-pedido:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .sin-datos {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-size: 1.1em;
+    }
+
+    .sin-datos-icon {
+      font-size: 3em;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    /* ESTILOS PARA DIRECCIÓN */
+    .seccion-direccion {
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .direccion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .seccion-titulo-direccion {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .direccion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .direccion-item {
+      padding: 16px;
+      background: var(--light-bg);
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .direccion-item-label {
+      font-size: 0.85em;
+      color: #999;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .direccion-item-valor {
+      font-size: 0.95em;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .sin-direccion {
+      text-align: center;
+      padding: 30px;
+      background: var(--light-bg);
+      border-radius: 12px;
+      border: 2px dashed var(--border);
+      color: #999;
+    }
+
+    .sin-direccion-icon {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      opacity: 0.6;
+    }
+
+    .mapa-perfil {
+      width: 100%;
+      height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-top: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    @media (max-width: 900px) {
+      .perfil-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tarjeta-perfil {
+        position: static;
+      }
+
+      .pedidos-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        padding: 15px 20px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      .seccion {
+        padding: 20px;
+      }
+
+      .form-botones {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="navbar-left">
+    <div class="logo" onclick="window.location.href='welcome.html'">✨ SofiShop</div>
+    <a href="perfumes.html" class="nav-link">🌸 Perfumes</a>
+  </div>
+  <div class="navbar-right">
+    <button class="nav-btn nav-btn-logout" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Salir
+    </button>
+  </div>
+</div>
+
+<!-- Container -->
+<div class="container">
+  <div class="perfil-grid">
+    <!-- TARJETA DE PERFIL -->
+    <div class="tarjeta-perfil">
+      <div class="perfil-header">
+        <div class="avatar" id="avatar-icon">👤</div>
+        <div class="perfil-nombre" id="perfil-nombre">Usuario</div>
+        <div class="perfil-rol" id="perfil-rol">Usuario</div>
+      </div>
+
+      <div class="perfil-body">
+        <div class="perfil-info-item">
+          <div class="perfil-info-label">Email</div>
+          <div class="perfil-info-valor" id="perfil-email">correo@email.com</div>
+        </div>
+
+        <div class="perfil-info-item">
+          <div class="perfil-info-label">Miembro desde</div>
+          <div class="perfil-info-valor" id="perfil-fecha">31 de Enero 2026</div>
+        </div>
+
+        <div class="perfil-acciones">
+          <button class="btn btn-primario" onclick="abrirEdicion()" style="display: none;">
+            <i class="fas fa-edit"></i> Editar Perfil
+          </button>
+          <button class="btn btn-logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="contenido-principal">
+      <!-- EDITAR PERFIL -->
+      <div id="seccion-edicion" class="seccion" style="display: none;">
+        <div class="seccion-titulo">
+          <i class="fas fa-edit"></i> Editar Información
+        </div>
+
+        <div class="form-grupo">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-input" id="edit-nombre" placeholder="Tu nombre">
+        </div>
+
+        <div class="form-grupo">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="edit-email" placeholder="tu@email.com">
+        </div>
+
+
+        <div class="form-botones">
+          <button class="btn btn-primario" onclick="guardarPerfil()">
+            <i class="fas fa-save"></i> Guardar Cambios
+          </button>
+          <button class="btn btn-secundario" onclick="cerrarEdicion()">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+        </div>
+      </div>
+
+      <!-- DIRECCIÓN DE ENTREGA -->
+      <div class="seccion-direccion">
+        <div class="direccion-header">
+          <div class="seccion-titulo-direccion">
+            <i class="fas fa-map-marker-alt"></i> Mi Dirección de Entrega
+          </div>
+          <button class="btn btn-primario" onclick="abrirEdicionDireccion()" style="height: fit-content;">
+            <i class="fas fa-edit"></i> Editar
+          </button>
+        </div>
+
+        <div id="ver-direccion">
+          <!-- Aquí se mostrará la dirección -->
+        </div>
+
+        <div id="editar-direccion" style="display: none;">
+          <div class="form-grupo">
+            <label class="form-label">Calle Principal *</label>
+            <input type="text" class="form-input" id="dir-callePrincipal" placeholder="Ej: Calle Primera Constituyente" required>
+          </div>
+          <div class="form-grupo">
+            <label class="form-label">Calle Secundaria *</label>
+            <input type="text" class="form-input" id="dir-calleSecundaria" placeholder="Ej: Avenida León Borja" required>
+          </div>
+          <div class="direccion-grid">
+            <div class="form-grupo">
+              <label class="form-label">Ciudad *</label>
+              <select class="form-input" id="dir-ciudad" required>
+                <option value="">Selecciona ciudad</option>
+                <option value="Riobamba">Riobamba</option>
+              </select>
+            </div>
+            <div class="form-grupo">
+              <label class="form-label">Provincia *</label>
+              <select class="form-input" id="dir-provincia" required>
+                <option value="">Selecciona provincia</option>
+                <option value="Chimborazo">Chimborazo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grupo">
+            <label class="form-label">Referencia *</label>
+            <textarea class="form-input" id="dir-referencia" placeholder="Ej: Cerca de la iglesia, esquina con farmacia" required></textarea>
+          </div>
+          <div class="form-grupo">
+            <label class="form-label">Teléfono de Contacto *</label>
+            <input type="tel" class="form-input" id="dir-telefono" placeholder="Ej: 0987654321" pattern="[0-9]{10}" required>
+          </div>
+
+          <div class="form-botones" style="margin-top: 20px;">
+            <button class="btn btn-primario" onclick="guardarDireccion()">
+              <i class="fas fa-save"></i> Guardar Dirección
+            </button>
+            <button class="btn btn-secundario" onclick="cerrarEdicionDireccion()">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MIS PEDIDOS -->
+      <div class="seccion">
+        <div class="seccion-titulo">
+          <i class="fas fa-box"></i> Mis pedidos
+        </div>
+        <div id="pedidos-usuario-container" class="pedidos-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="audit.js"></script>
+<script>
+  // Verificar sesión
+  if (!localStorage.getItem('usuario')) {
+    window.location.href = 'index.html';
+  }
+
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+  // Llenar información del perfil
+  function cargarPerfil() {
+    document.getElementById('perfil-nombre').textContent = usuario.nombre || 'Usuario';
+    document.getElementById('perfil-email').textContent = usuario.email || 'No especificado';
+    document.getElementById('perfil-rol').textContent = (usuario.rol || 'usuario').charAt(0).toUpperCase() + (usuario.rol || 'usuario').slice(1);
+
+    // Fecha de registro
+    const fechaRegistro = new Date(usuario.fechaRegistro || Date.now());
+    document.getElementById('perfil-fecha').textContent = fechaRegistro.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    // Avatar según rol
+    const avatarEl = document.getElementById('avatar-icon');
+    if (usuario.rol === 'admin') {
+      avatarEl.textContent = '👑';
+    } else {
+      avatarEl.textContent = '👤';
+    }
+  }
+
+  // Funciones removidas de pedidos
+
+  // Abrir modal de detalles del pedido
+  function abrirPedido(index) {
+    const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+    const pedido = pedidos[index];
+
+    document.getElementById('modal-pedido-titulo').textContent = `Detalles - ${pedido.id}`;
+
+    const contenido = `
+      <div style="display: grid; gap: 15px;">
+        <div>
+          <p style="color: #999; font-size: 0.9em; margin: 0 0 5px 0;">Fecha</p>
+          <p style="margin: 0; font-weight: 600; color: var(--text);">${new Date(pedido.fecha).toLocaleString('es-ES')}</p>
+        </div>
+        <div>
+          <p style="color: #999; font-size: 0.9em; margin: 0 0 5px 0;">Estado</p>
+          <span style="display: inline-block; padding: 6px 12px; border-radius: 12px; font-weight: 600; text-transform: uppercase; font-size: 0.85em; background: ${pedido.estado === 'completado' ? '#d4edda' : pedido.estado === 'cancelado' ? '#f8d7da' : '#fff3cd'}; color: ${pedido.estado === 'completado' ? '#155724' : pedido.estado === 'cancelado' ? '#721c24' : '#856404'};">
+            ${pedido.estado || 'pendiente'}
+          </span>
+        </div>
+        <div>
+          <p style="color: #999; font-size: 0.9em; margin: 0 0 10px 0;">Productos</p>
+          ${pedido.productos.map(p => `
+            <div style="background: var(--light-bg); padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+              <div style="font-weight: 600; color: var(--text);">${p.nombre}</div>
+              <div style="font-size: 0.85em; color: #999;">💎 ${p.marca || 'Marca'}</div>
+              <div style="color: var(--primary); font-weight: 700; margin-top: 5px;">$${parseFloat(p.precio).toFixed(2)}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="border-top: 2px solid var(--border); padding-top: 15px; margin-top: 15px;">
+          <p style="color: #999; font-size: 0.9em; margin: 0 0 10px 0;">Total</p>
+          <p style="font-size: 1.5em; font-weight: 800; color: var(--primary); margin: 0;">$${parseFloat(pedido.total).toFixed(2)}</p>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('modal-pedido-contenido').innerHTML = contenido;
+    document.getElementById('modal-pedido').style.display = 'flex';
+  }
+
+  function cerrarModalPedido() {
+    document.getElementById('modal-pedido').style.display = 'none';
+  }
+
+  // Obtener pedidos del backend y sincronizar con localStorage
+  async function obtenerPedidosUsuario() {
+    const email = (usuario.email || '').toLowerCase();
+    
+    if (!email) {
+      console.log('No hay email de usuario');
+      return [];
+    }
+
+    try {
+      // Intentar obtener del backend
+      const response = await fetch(`http://localhost:3000/api/orders/usuario/${encodeURIComponent(email)}`);
+      
+      if (response.ok) {
+        const pedidosBackend = await response.json();
+        console.log('Pedidos obtenidos del backend:', pedidosBackend.length);
+        
+        // Convertir formato del backend al formato local (agregar id si no existe)
+        const pedidosFormateados = pedidosBackend.map(p => ({
+          id: p.id || `PED-${new Date(p.fecha).getTime()}`,
+          cliente: p.cliente,
+          email: p.email,
+          telefono: p.telefono,
+          direccion: p.direccion,
+          productos: p.productos,
+          total: p.total,
+          estado: p.estado || 'pendiente',
+          fecha: p.fecha
+        }));
+        
+        // Sincronizar con localStorage
+        localStorage.setItem('pedidos', JSON.stringify(pedidosFormateados));
+        
+        return pedidosFormateados;
+      }
+    } catch (error) {
+      console.log('Backend no disponible, usando localStorage:', error.message);
+    }
+    
+    // Si el backend no está disponible, usar localStorage
+    const pedidosLocal = JSON.parse(localStorage.getItem('pedidos')) || [];
+    const pedidosFiltrados = pedidosLocal.filter(pedido => {
+      const pedidoEmail = (pedido.email || '').toLowerCase();
+      return pedidoEmail === email;
+    });
+    
+    console.log('Pedidos del localStorage:', pedidosFiltrados.length);
+    return pedidosFiltrados;
+  }
+
+  async function cargarPedidosUsuario() {
+    const container = document.getElementById('pedidos-usuario-container');
+    
+    // Mostrar loading
+    container.innerHTML = `
+      <div style="text-align: center; padding: 20px; color: #666;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 2em; margin-bottom: 10px;"></i>
+        <div>Cargando pedidos...</div>
+      </div>
+    `;
+    
+    const pedidos = await obtenerPedidosUsuario();
+
+    if (!pedidos.length) {
+      container.innerHTML = `
+        <div class="sin-datos">
+          <div class="sin-datos-icon">📦</div>
+          <div>No tienes pedidos aún</div>
+        </div>
+      `;
+      return;
+    }
+
+    pedidos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    container.innerHTML = pedidos.map(pedido => `
+      <div class="pedido-mini-card">
+        <div class="pedido-mini-numero">Pedido ${pedido.id || 'N/A'}</div>
+        <div style="font-weight: 700; color: var(--secondary); margin-bottom: 6px;">
+          ${new Date(pedido.fecha).toLocaleDateString('es-ES')} · $${parseFloat(pedido.total).toFixed(2)}
+        </div>
+        <div class="pedido-mini-estado estado-${pedido.estado || 'pendiente'}">
+          ${pedido.estado || 'pendiente'}
+        </div>
+        <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+          ${pedido.productos.map(p => p.nombre).join(', ')}
+        </div>
+        <div style="margin-top: 12px; display: flex; gap: 8px;">
+          <button class="btn-ver-factura" onclick="verFactura('${pedido.id}')">
+            <i class="fas fa-receipt"></i> Ver Factura
+          </button>
+          <button class="btn-detalles-pedido" onclick="verDetallesPedido('${pedido.id}')">
+            <i class="fas fa-eye"></i> Detalles
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Ver factura del pedido
+  function verFactura(pedidoId) {
+    window.location.href = `factura.html?pedido=${pedidoId}`;
+  }
+
+  // Ver detalles del pedido
+  function verDetallesPedido(pedidoId) {
+    const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+    const pedido = pedidos.find(p => p.id === pedidoId);
+
+    if (pedido) {
+      const detalles = `
+PEDIDO: ${pedido.id}
+FECHA: ${new Date(pedido.fecha).toLocaleDateString('es-ES')}
+ESTADO: ${pedido.estado}
+
+CLIENTE: ${pedido.cliente}
+EMAIL: ${pedido.email}
+TELÉFONO: ${pedido.telefono}
+
+DIRECCIÓN DE ENTREGA:
+${pedido.direccion ? `
+Calle: ${pedido.direccion.callePrincipal} y ${pedido.direccion.calleSecundaria}
+Ciudad: ${pedido.direccion.ciudad}
+Provincia: ${pedido.direccion.provincia}
+Referencia: ${pedido.direccion.referencia || 'N/A'}
+` : 'Sin dirección registrada'}
+
+PRODUCTOS:
+${pedido.productos.map(p => `- ${p.nombre} (${p.marca || 'N/A'}): $${p.precio}`).join('\n')}
+
+TOTAL: $${pedido.total}
+      `;
+      alert(detalles);
+    }
+  }
+
+  // Abrir edición
+  function abrirEdicion() {
+    document.getElementById('edit-nombre').value = usuario.nombre || '';
+    document.getElementById('edit-email').value = usuario.email || '';
+    document.getElementById('seccion-edicion').style.display = 'block';
+    document.getElementById('seccion-edicion').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Cerrar edición
+  function cerrarEdicion() {
+    document.getElementById('seccion-edicion').style.display = 'none';
+  }
+
+  // Guardar perfil (solo datos básicos)
+  async function guardarPerfil() {
+    alert('La edición de perfil está deshabilitada por ahora.');
+  }
+
+  // Logout
+  function logout() {
+    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('carrito');
+      window.location.replace('index.html');
+    }
+  }
+
+  // FUNCIONES PARA DIRECCIÓN
+
+  function cargarDireccion() {
+    const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+    const verDiv = document.getElementById('ver-direccion');
+
+    if (usuario.direccion && usuario.direccion.callePrincipal) {
+      const dir = usuario.direccion;
+      verDiv.innerHTML = `
+        <div class="direccion-grid">
+          <div class="direccion-item">
+            <div class="direccion-item-label">Calle Principal</div>
+            <div class="direccion-item-valor">${dir.callePrincipal}</div>
+          </div>
+          <div class="direccion-item">
+            <div class="direccion-item-label">Calle Secundaria</div>
+            <div class="direccion-item-valor">${dir.calleSecundaria}</div>
+          </div>
+          <div class="direccion-item">
+            <div class="direccion-item-label">Ciudad</div>
+            <div class="direccion-item-valor">${dir.ciudad}</div>
+          </div>
+          <div class="direccion-item">
+            <div class="direccion-item-label">Provincia</div>
+            <div class="direccion-item-valor">${dir.provincia}</div>
+          </div>
+          <div class="direccion-item" style="grid-column: 1 / -1;">
+            <div class="direccion-item-label">Referencia</div>
+            <div class="direccion-item-valor">${dir.referencia}</div>
+          </div>
+          <div class="direccion-item" style="grid-column: 1 / -1;">
+            <div class="direccion-item-label">Teléfono</div>
+            <div class="direccion-item-valor">${dir.telefono}</div>
+          </div>
+        </div>
+      `;
+    } else {
+      verDiv.innerHTML = `
+        <div class="sin-direccion">
+          <div class="sin-direccion-icon">
+            <i class="fas fa-home"></i>
+          </div>
+          <p>No tienes una dirección de entrega registrada</p>
+          <small>Agrega tu dirección para recibir tus pedidos a domicilio</small>
+        </div>
+      `;
+    }
+  }
+
+  function abrirEdicionDireccion() {
+    const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+    const dir = usuario.direccion || {};
+
+    document.getElementById('dir-callePrincipal').value = dir.callePrincipal || '';
+    document.getElementById('dir-calleSecundaria').value = dir.calleSecundaria || '';
+    document.getElementById('dir-ciudad').value = dir.ciudad || 'Riobamba';
+    document.getElementById('dir-provincia').value = dir.provincia || 'Chimborazo';
+    document.getElementById('dir-referencia').value = dir.referencia || '';
+    document.getElementById('dir-telefono').value = dir.telefono || usuario.telefono || '';
+
+    document.getElementById('ver-direccion').style.display = 'none';
+    document.getElementById('editar-direccion').style.display = 'block';
+  }
+
+  function cerrarEdicionDireccion() {
+    document.getElementById('ver-direccion').style.display = 'block';
+    document.getElementById('editar-direccion').style.display = 'none';
+  }
+
+  function guardarDireccion() {
+    const callePrincipal = document.getElementById('dir-callePrincipal').value.trim();
+    const calleSecundaria = document.getElementById('dir-calleSecundaria').value.trim();
+    const ciudad = document.getElementById('dir-ciudad').value.trim();
+    const provincia = document.getElementById('dir-provincia').value.trim();
+    const referencia = document.getElementById('dir-referencia').value.trim();
+    const telefono = document.getElementById('dir-telefono').value.trim();
+
+    if (!callePrincipal || !calleSecundaria || !ciudad || !provincia || !referencia || !telefono) {
+      alert('Por favor completa todos los campos obligatorios');
+      return;
+    }
+
+    if (ciudad !== 'Riobamba') {
+      alert('Solo realizamos entregas en Riobamba');
+      return;
+    }
+
+    if (!/^\d{10}$/.test(telefono)) {
+      alert('El teléfono debe tener 10 dígitos');
+      return;
+    }
+
+    const direccion = {
+      callePrincipal,
+      calleSecundaria,
+      ciudad,
+      provincia,
+      referencia,
+      telefono,
+      completa: `${callePrincipal} y ${calleSecundaria}, ${ciudad}, ${provincia}`
+    };
+
+    usuario.direccion = direccion;
+    usuario.telefono = telefono;
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+
+    alert('✓ Dirección guardada correctamente');
+    cerrarEdicionDireccion();
+    cargarDireccion();
+  }
+
+  // Inicializar
+  window.addEventListener('load', () => {
+    cargarPerfil();
+    cargarDireccion();
+    cargarPedidosUsuario();
+    if (window.AuditLogger) {
+      AuditLogger.log('Visitó el perfil');
+    }
+  });
+</script>
+
+</body>
+</html>

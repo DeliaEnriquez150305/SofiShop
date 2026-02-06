@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SofiShop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="welcome login-bg">
+
+<div class="container">
+  <div class="card login-card">
+    <h1>SofiShop</h1>
+    <p class="subtitle">Inicia sesión para continuar</p>
+
+    <input type="email" id="email" placeholder="Correo electrónico" class="input">
+    <input type="password" id="password" placeholder="Contraseña" class="input">
+
+    <button class="btn email" onclick="login()">Iniciar sesión</button>
+
+    <p class="alt">
+      ¿No tienes cuenta?
+      <a href="register.html">Regístrate</a>
+    </p>
+  </div>
+</div>
+
+<script src="audit.js"></script>
+<script>
+async function login() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  const res = await fetch('http://localhost:3000/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+    if (window.AuditLogger) {
+      AuditLogger.log('Inicio de sesión', { metodo: 'email' });
+    }
+    alert('Bienvenida ' + data.usuario.nombre);
+    window.location.href = 'welcome.html';
+  } else {
+    alert(data.mensaje);
+  }
+}
+</script>
+
+</body>
+</html>

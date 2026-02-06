@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auto Login Test</title>
+</head>
+<body>
+    <h1>Auto-Login Test</h1>
+    <div id="status"></div>
+    <div id="productos"></div>
+    <script>
+        const statusDiv = document.getElementById('status');
+        
+        async function loginAndTest() {
+            try {
+                // Step 1: Login
+                statusDiv.innerHTML += '<p>Intentando login...</p>';
+                const loginRes = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'deliaenriquez150305@gmail.com',
+                        password: 'usuario123'
+                    })
+                });
+                
+                const loginData = await loginRes.json();
+                if (loginData.usuario) {
+                    statusDiv.innerHTML += '<p>✅ Login exitoso</p>';
+                    localStorage.setItem('usuario', JSON.stringify(loginData.usuario));
+                    localStorage.setItem('token', loginData.token);
+                    
+                    // Step 2: Fetch products
+                    statusDiv.innerHTML += '<p>Cargando productos...</p>';
+                    const prodRes = await fetch('http://localhost:3000/api/products?categoria=perfumes');
+                    const products = await prodRes.json();
+                    
+                    statusDiv.innerHTML += `<p>✅ Productos cargados: ${products.length}</p>`;
+                    if (products.length > 0) {
+                        statusDiv.innerHTML += '<p>Primeros 3:</p>';
+                        const prodDiv = document.getElementById('productos');
+                        products.slice(0, 3).forEach(p => {
+                            prodDiv.innerHTML += `<p>${p.nombre} - $${p.precio}</p>`;
+                        });
+                    }
+                } else {
+                    statusDiv.innerHTML += `<p>❌ Error de login: ${loginData.message}</p>`;
+                }
+            } catch (err) {
+                statusDiv.innerHTML += `<p>❌ Error: ${err.message}</p>`;
+            }
+        }
+        
+        loginAndTest();
+    </script>
+</body>
+</html>

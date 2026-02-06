@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agregar Producto - SofiShop</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #F1F8F6 0%, #E0F8F5 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 520px; /* más compacto y centrado */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .header {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 12px; /* texto superior y centrado con leve separación */
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      color: #111827;
+      margin: 0 0 4px;
+      font-weight: 800;
+    }
+    
+    .header p {
+      color: #4b5563;
+      font-size: 12px;
+      margin: 0;
+    }
+    
+    .card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+      padding: 10px; /* un poco más de aire pero tablero más pequeño por ancho reducido */
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      color: #111827;
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px; /* compacto */
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1f2937;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .label-icon {
+      font-size: 16px;
+    }
+    
+    .input, select {
+      padding: 10px 12px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 12px;
+      transition: all 0.25s ease;
+      font-family: inherit;
+      background: rgba(250, 251, 252, 0.9);
+      color: #111827;
+    }
+    
+    .input::placeholder {
+      color: #9ca3af;
+    }
+    
+    .input:focus, select:focus {
+      outline: none;
+      border-color: #20B997;
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(32, 185, 151, 0.18);
+    }
+    
+    select {
+      cursor: pointer;
+      color: #111827;
+    }
+    
+    select option {
+      padding: 10px;
+      color: #111827;
+    }
+    
+    input[type="file"]::file-selector-button {
+      padding: 6px 12px;
+      background: #20B997;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      transition: all 0.25s ease;
+      margin-right: 8px;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background: #149976;
+    .form-info {
+      background: rgba(32, 185, 151, 0.06);
+      border-left: 3px solid #20B997;
+      padding: 7px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #374151;
+      margin-top: -2px;
+      font-weight: 500;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .btn.email {
+      background: linear-gradient(135deg, #20B997 0%, #149976 100%);
+      color: white;
+      box-shadow: 0 6px 20px rgba(32, 185, 151, 0.28);
+    }
+
+    .btn.email:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(32, 185, 151, 0.36);
+    
+    .btn.email:active {
+      transform: translateY(0);
+    }
+    
+    .alt {
+      text-align: center;
+      margin-top: 12px;
+    }
+    
+    .alt a {
+      color: #20B997;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 12px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .alt a:hover {
+      color: #149976;
+      gap: 8px;
+    }
+    
+    .success-message {
+      background: #C3FAE8;
+      border-left: 4px solid #20B997;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: none;
+      animation: slideDown 0.3s ease-out;
+      font-size: 12px;
+      color: #0B5345;
+    }
+    
+    .success-message.show {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #0B5345;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>✨ Agregar Producto</h1>
+      <p>Completa el formulario para publicar tu nuevo producto</p>
+    </div>
+    
+    <div class="card">
+      <div class="success-message" id="successMessage">
+        <span>✓</span>
+        <span>¡Producto agregado exitosamente!</span>
+      </div>
+      
+      <form id="form-producto" enctype="multipart/form-data">
+        <div class="form-group">
+          <label><span class="label-icon">📝</span>Nombre del producto</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Ej: Perfume Dior Sauvage" class="input" required>
+          <div class="form-info">Nombre único y descriptivo</div>
+        </div>
+        
+        <div class="form-group">
+          <label><span class="label-icon">💰</span>Precio</label>
+          <input type="number" id="precio" name="precio" placeholder="Ej: 99.99" class="input" step="0.01" required>
+          <div class="form-info">Decimales permitidos (ej: 502.99)</div>
+        </div>
+        
+        <div class="form-group">
+          <label><span class="label-icon">📦</span>Stock</label>
+          <input type="number" id="stock" name="stock" placeholder="Ej: 50" class="input" required>
+          <div class="form-info">Unidades disponibles</div>
+        </div>
+        
+        <div class="form-group">
+          <label><span class="label-icon">🏷️</span>Categoría</label>
+          <div class="input" style="display:flex; align-items:center; font-weight:700;">Perfumes</div>
+          <input type="hidden" id="categoria" name="categoria" value="perfumes">
+          <div class="form-info">Categoría única de la tienda</div>
+        </div>
+        
+        <div class="form-group" id="grupoGenero" style="display: none;">
+          <label><span class="label-icon">🎯</span>Género</label>
+          <select id="genero" name="genero" class="input">
+            <option value="">Selecciona género</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+          </select>
+          <div class="form-info">¿Para hombre o mujer?</div>
+        </div>
+
+        <div class="form-group" id="grupoPerfume" style="display: none;">
+          <label><span class="label-icon">💎</span>Marca de Perfume</label>
+          <select id="marcaPerfume" name="marcaPerfume" class="input">
+            <option value="">Selecciona una marca</option>
+          </select>
+          <div class="form-info">Selecciona primero el género</div>
+        </div>
+        
+        <div class="form-group">
+          <label><span class="label-icon">�</span>Imagen</label>
+          <input type="file" id="imagen" name="imagen" accept="image/*" class="input" required>
+          <div class="form-info">Sube una imagen desde tu dispositivo</div>
+        </div>
+        
+        <div class="btn-group">
+          <button type="submit" class="btn email">
+            <span>➕</span>
+            <span>Agregar</span>
+          </button>
+        </div>
+      </form>
+      
+      <p class="alt">
+        <a href="perfumes.html">
+          <span>←</span>
+          <span>Volver</span>
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuario || usuario.rol !== 'admin') {
+      window.location.href = 'index.html';
+    }
+
+    const form = document.getElementById('form-producto');
+    const successMessage = document.getElementById('successMessage');
+    
+    const grupoPerfume = document.getElementById('grupoPerfume');
+    const grupoGenero = document.getElementById('grupoGenero');
+    grupoPerfume.style.display = 'flex';
+    grupoGenero.style.display = 'flex';
+    document.getElementById('genero').required = true;
+    document.getElementById('marcaPerfume').required = true;
+    const imagenInput = document.getElementById('imagen');
+    
+    // Marcas por género
+    const marcasPorGenero = {
+      'Mujer': ['Carolina Herrera', 'Kathy Perry', 'Ariana Grande', 'Britney Spears', 'Calvin Klein', 'Paris Hilton', 'Afnan', 'Paco Rabanne', 'Hugo Boss'],
+      'Hombre': ['Bharara', 'Paco Rabanne', 'Hugo Boss', 'Ralph Lauren', 'Lattafa', 'Paris Hilton', 'Calvin Klein', 'Carolina Herrera', 'Gucci']
+    };
+    
+    // Actualizar marcas cuando cambie el género
+    document.getElementById('genero').addEventListener('change', function() {
+      const generoSeleccionado = this.value;
+      const selectMarca = document.getElementById('marcaPerfume');
+      
+      // Limpiar opciones actuales
+      selectMarca.innerHTML = '<option value="">Selecciona una marca</option>';
+      
+      // Agregar marcas según el género seleccionado
+      if (generoSeleccionado && marcasPorGenero[generoSeleccionado]) {
+        marcasPorGenero[generoSeleccionado].forEach(marca => {
+          const option = document.createElement('option');
+          option.value = marca;
+          option.textContent = marca;
+          selectMarca.appendChild(option);
+        });
+      }
+    });
+    
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      
+      const genero = document.getElementById('genero').value;
+      const marca = document.getElementById('marcaPerfume').value;
+      const tieneArchivo = imagenInput.files && imagenInput.files.length > 0;
+      if (!genero) {
+        alert('Por favor selecciona el género (Hombre/Mujer)');
+        return;
+      }
+      if (!tieneArchivo) {
+        alert('Por favor pega una imagen o sube un archivo');
+        return;
+      }
+      // Guardamos género como subcategoría y la marca en su campo dedicado
+      formData.set('subcategoria', genero);
+      formData.set('marca', marca);
+
+      try {
+        const res = await fetch('http://localhost:3000/api/products', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (res.ok) {
+          successMessage.classList.add('show');
+          form.reset();
+          document.getElementById('categoria').value = 'perfumes';
+          document.getElementById('genero').required = true;
+          document.getElementById('marcaPerfume').required = true;
+          imagenInput.value = '';
+          setTimeout(() => {
+            successMessage.classList.remove('show');
+            window.location.href = 'perfumes.html';
+          }, 2000);
+        } else {
+          alert('Error al agregar producto');
+        }
+      } catch (error) {
+        alert('Error de conexión: ' + error.message);
+      }
+    });
+
+    // Inicializar estado de campos al cargar la página
+    document.getElementById('categoria').value = 'perfumes';
+  </script>
+  <script src="audit.js"></script>
+
+</body>
+</html>

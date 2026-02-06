@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup para Perfumes</title>
+</head>
+<body>
+    <h1>Preparando acceso a perfumes...</h1>
+    <div id="status"></div>
+    <script>
+        const statusDiv = document.getElementById('status');
+        
+        async function setup() {
+            try {
+                // Crear un usuario en localStorage
+                const usuario = {
+                    _id: '123',
+                    nombre: 'Delia Enríquez',
+                    email: 'deliaenriquez150305@gmail.com',
+                    rol: 'cliente'
+                };
+                
+                localStorage.setItem('usuario', JSON.stringify(usuario));
+                localStorage.setItem('cart', JSON.stringify([]));
+                
+                statusDiv.innerHTML = '<p>✅ Setup completado. Redirigiendo a perfumes...</p>';
+                
+                // Redirigir a perfumes.html
+                setTimeout(() => {
+                    window.location.href = '/perfumes.html';
+                }, 2000);
+            } catch (err) {
+                statusDiv.innerHTML = `<p>❌ Error: ${err.message}</p>`;
+            }
+        }
+        
+        setup();
+    </script>
+</body>
+</html>

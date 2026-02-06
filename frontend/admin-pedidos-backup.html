@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestión de Pedidos - SofiShop Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #20B997;
+      --secondary: #0B5345;
+      --accent: #C3FAE8;
+      --text: #2c2c2c;
+      --light-bg: #F1F8F6;
+      --border: #A8E6D5;
+      --shadow: 0 8px 32px rgba(32, 185, 151, 0.12);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--light-bg);
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+    }
+
+    .navbar {
+      background: white;
+      padding: 18px 40px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .logo {
+      font-size: 1.8em;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, #d46a99 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .navbar-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn-logout {
+      background: #f5f5f5;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .nav-btn-logout:hover {
+      background: var(--accent);
+      border-color: var(--primary);
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 2.2em;
+      color: var(--secondary);
+      margin: 0;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      padding: 20px;
+      border-radius: 12px;
+      color: white;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-number {
+      font-size: 2em;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 0.9em;
+      opacity: 0.95;
+    }
+
+    .filtros {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      margin-bottom: 30px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filtro-grupo {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .filtro-grupo label {
+      font-weight: 600;
+      color: var(--secondary);
+      font-size: 0.9em;
+    }
+
+    .filtro-grupo select {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      color: var(--text);
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .pedidos-lista {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .pedido-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .pedido-card:hover {
+      box-shadow: var(--shadow);
+      border-color: var(--primary);
+    }
+
+    .pedido-header {
+      background: linear-gradient(135deg, #f8f9fa 0%, var(--light-bg) 100%);
+      padding: 20px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .pedido-info {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .pedido-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .pedido-info-label {
+      font-size: 0.8em;
+      color: #999;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pedido-info-valor {
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .direccion-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .direccion-link:hover {
+      text-decoration: underline;
+    }
+
+    .pedido-estado {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .estado-pendiente {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .estado-completado {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .estado-cancelado {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .pedido-body {
+      padding: 20px;
+    }
+
+    .productos-titulo {
+      font-size: 1em;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .producto-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: var(--light-bg);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 0.95em;
+    }
+
+    .producto-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .producto-nombre {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .producto-marca {
+      font-size: 0.85em;
+      color: #999;
+    }
+
+    .producto-precio {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1em;
+    }
+
+    .pedido-acciones {
+      display: flex;
+      gap: 10px;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      background: var(--light-bg);
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primario {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primario:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    .btn-secundario {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secundario:hover {
+      background: var(--accent);
+      border-color: var(--primary);
+    }
+
+    .btn-peligroso {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-peligroso:hover {
+      background: #ff5252;
+    }
+
+    .sin-pedidos {
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      color: #999;
+    }
+
+    .sin-pedidos-icon {
+      font-size: 3em;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    .sin-pedidos-texto {
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .pedido-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .pedido-info {
+        gap: 15px;
+      }
+
+      .filtros {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .filtro-grupo {
+        width: 100%;
+      }
+
+      .filtro-grupo select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="navbar-left">
+    <div class="logo" onclick="window.location.href='welcome.html'">✨ SofiShop</div>
+    <a href="perfumes.html" class="nav-link">🌸 Perfumes</a>
+  </div>
+  <div class="navbar-right">
+    <button class="nav-btn nav-btn-logout" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Salir
+    </button>
+  </div>
+</div>
+
+<!-- Container -->
+<div class="container">
+  <!-- Header con Estadísticas -->
+  <div class="header">
+    <div>
+      <h1>📦 Gestión de Pedidos</h1>
+      <p style="color: #999; margin-top: 5px;">Panel de administración</p>
+    </div>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="total-pedidos">0</div>
+        <div class="stat-label">Total Pedidos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="total-ventas">$0</div>
+        <div class="stat-label">Total Ventas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros">
+    <div class="filtro-grupo">
+      <label>Buscar pedido:</label>
+      <input type="text" id="search-pedidos" placeholder="Nombre del cliente..." onkeyup="buscarPedidos()" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: white; color: var(--text); cursor: text; font-family: 'Poppins', sans-serif;">
+    </div>
+    <div class="filtro-grupo">
+      <label>Filtrar por estado:</label>
+      <select id="filtro-estado" onchange="filtrarPedidos()">
+        <option value="">Todos</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="completado">Completado</option>
+        <option value="cancelado">Cancelado</option>
+      </select>
+    </div>
+    <div class="filtro-grupo" style="margin-left: auto;">
+      <button class="btn btn-secundario" onclick="recargarPedidos()">
+        <i class="fas fa-sync-alt"></i> Recargar
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de Pedidos -->
+  <div class="pedidos-lista" id="pedidos-container">
+    <!-- Se llena con JavaScript -->
+  </div>
+</div>
+
+<script src="audit.js"></script>
+<script>
+  // Verificar que es admin
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+  if (!usuario || usuario.rol !== 'admin') {
+    window.location.href = 'perfumes.html';
+  }
+
+  if (usuario && window.AuditLogger) {
+    AuditLogger.log('Visitó admin de pedidos');
+  }
+
+  // Obtener todos los pedidos del localStorage
+  async function obtenerPedidos() { try { const response = await fetch('http://localhost:3000/api/orders'); if (!response.ok) throw new Error('Error al obtener pedidos'); const pedidos = await response.json(); localStorage.setItem('pedidos', JSON.stringify(pedidos)); return pedidos; } catch (error) { console.log('Backend no disponible, usando localStorage:', error.message); return JSON.parse(localStorage.getItem('pedidos')) || []; }
+  }
+
+  // Guardar pedidos en localStorage
+  function guardarPedidos(pedidos) {
+    localStorage.setItem('pedidos', JSON.stringify(pedidos));
+  }
+
+  function formatearDireccion(dir) {
+    if (!dir) {
+      return 'No disponible';
+    }
+    const partes = [dir.callePrincipal, dir.calleSecundaria].filter(Boolean).join(' y ');
+    const ciudad = [dir.ciudad, dir.provincia].filter(Boolean).join(', ');
+    const base = [partes, ciudad].filter(Boolean).join(', ');
+    return base || 'No disponible';
+  }
+
+  function obtenerLinkMaps(dir) {
+    if (!dir) {
+      return '';
+    }
+    if (dir.latitud && dir.longitud) {
+      return `https://www.google.com/maps?q=${dir.latitud},${dir.longitud}`;
+    }
+    const texto = formatearDireccion(dir);
+    return texto && texto !== 'No disponible'
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(texto)}`
+      : '';
+  }
+
+  // Buscar y filtrar pedidos
+  function buscarPedidos() {
+    aplicarFiltrosCombinados();
+  }
+
+  function aplicarFiltrosCombinados() {
+    const searchInput = document.getElementById('search-pedidos').value.toLowerCase();
+    const estado = document.getElementById('filtro-estado').value;
+    const allPedidos = obtenerPedidos();
+    
+    let pedidosFiltrados = allPedidos.filter(pedido => {
+      // Filtro por búsqueda
+      const nombreCliente = (pedido.cliente || '').toLowerCase();
+      const emailCliente = (pedido.email || '').toLowerCase();
+      const cumpleBusqueda = !searchInput || nombreCliente.includes(searchInput) || emailCliente.includes(searchInput);
+      
+      // Filtro por estado
+      const cumpleEstado = !estado || pedido.estado === estado;
+      
+      return cumpleBusqueda && cumpleEstado;
+    });
+    
+    mostrarPedidos(pedidosFiltrados);
+  }
+
+  // Mostrar pedidos
+  function mostrarPedidos(pedidosFiltrados) {
+    const container = document.getElementById('pedidos-container');
+    const pedidos = pedidosFiltrados || obtenerPedidos();
+
+    // Calcular estadísticas
+    actualizarEstadisticas(pedidos);
+
+    if (pedidos.length === 0) {
+      container.innerHTML = `
+        <div class="sin-pedidos">
+          <div class="sin-pedidos-icon">📭</div>
+          <div class="sin-pedidos-texto">No hay pedidos disponibles</div>
+        </div>
+      `;
+      return;
+    }
+
+    // Ordenar por fecha descendente
+    pedidos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    container.innerHTML = pedidos.map((pedido, index) => {
+      const direccionTexto = formatearDireccion(pedido.direccion);
+      const linkMaps = obtenerLinkMaps(pedido.direccion);
+      const direccionHtml = linkMaps
+        ? `<a class="direccion-link" href="${linkMaps}" target="_blank" rel="noopener noreferrer"><i class="fas fa-map-marked-alt"></i> ${direccionTexto}</a>`
+        : direccionTexto;
+      const telefono = pedido.telefono || (pedido.direccion ? pedido.direccion.telefono : '') || 'No disponible';
+
+      return `
+      <div class="pedido-card">
+        <div class="pedido-header">
+          <div class="pedido-info">
+            <div class="pedido-info-item">
+              <div class="pedido-info-label">Pedido #</div>
+              <div class="pedido-info-valor">${pedido.id || 'PED-' + (index + 1)}</div>
+            </div>
+            <div class="pedido-info-item">
+              <div class="pedido-info-label">Cliente</div>
+              <div class="pedido-info-valor">${pedido.cliente}</div>
+            </div>
+            <div class="pedido-info-item">
+              <div class="pedido-info-label">Email</div>
+              <div class="pedido-info-valor">${pedido.email || 'No disponible'}</div>
+            </div>
+            <div class="pedido-info-item">
+              <div class="pedido-info-label">Teléfono</div>
+              <div class="pedido-info-valor">${telefono}</div>
+            </div>
+            <div class="pedido-info-item">
+              <div class="pedido-info-label">Dirección</div>
+              <div class="pedido-info-valor">${direccionHtml}</div>
+            </div>
+            <div class="pedido-info-item">
+              <div class="pedido-info-label">Fecha</div>
+              <div class="pedido-info-valor">${new Date(pedido.fecha).toLocaleDateString('es-ES')}</div>
+            </div>
+            <div class="pedido-info-item">
+              <div class="pedido-info-label">Total</div>
+              <div class="pedido-info-valor" style="color: var(--primary);">$${parseFloat(pedido.total).toFixed(2)}</div>
+            </div>
+          </div>
+          <div class="pedido-estado estado-${pedido.estado || 'pendiente'}">
+            ${pedido.estado === 'completado' ? '✓' : pedido.estado === 'cancelado' ? '✕' : '⏳'}
+            ${(pedido.estado || 'pendiente').charAt(0).toUpperCase() + (pedido.estado || 'pendiente').slice(1)}
+          </div>
+        </div>
+
+        <div class="pedido-body">
+          <div class="productos-titulo">
+            <i class="fas fa-box"></i> Productos (${pedido.productos.length})
+          </div>
+          ${pedido.productos.map(p => `
+            <div class="producto-item">
+              <div class="producto-info">
+                <div class="producto-nombre">${p.nombre}</div>
+                <div class="producto-marca">💎 ${p.marca || 'Marca'}</div>
+              </div>
+              <div class="producto-precio">$${parseFloat(p.precio).toFixed(2)}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="pedido-acciones">
+          ${pedido.estado !== 'completado' ? `
+            <button class="btn btn-primario" onclick="cambiarEstado(${index}, 'completado')">
+              <i class="fas fa-check"></i> Marcar como Completado
+            </button>
+          ` : ''}
+          ${pedido.estado !== 'cancelado' && pedido.estado !== 'completado' ? `
+            <button class="btn btn-peligroso" onclick="cambiarEstado(${index}, 'cancelado')">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+          ` : ''}
+          <button class="btn btn-secundario" onclick="verDetalles(${index})">
+            <i class="fas fa-eye"></i> Ver Detalles
+          </button>
+        </div>
+      </div>
+    `;
+    }).join('');
+  }
+
+  // Cambiar estado del pedido
+  function cambiarEstado(index, nuevoEstado) {
+    const pedidos = obtenerPedidos();
+    if (pedidos[index]) {
+      pedidos[index].estado = nuevoEstado;
+      guardarPedidos(pedidos);
+      mostrarPedidos();
+      alert(`Pedido marcado como ${nuevoEstado}`);
+    }
+  }
+
+  // Filtrar pedidos
+  function filtrarPedidos() {
+    aplicarFiltrosCombinados();
+  }
+
+  // Ver detalles completos del pedido
+  function verDetalles(index) {
+    const pedidos = obtenerPedidos();
+    const pedido = pedidos[index];
+
+    const detalles = `
+PEDIDO #${pedido.id || 'PED-' + (index + 1)}
+═════════════════════════════════════════
+
+📋 CLIENTE: ${pedido.cliente}
+📧 EMAIL: ${pedido.email || 'No disponible'}
+📞 TELÉFONO: ${pedido.telefono || (pedido.direccion ? pedido.direccion.telefono : '') || 'No disponible'}
+📍 DIRECCIÓN: ${formatearDireccion(pedido.direccion)}
+📅 FECHA: ${new Date(pedido.fecha).toLocaleString('es-ES')}
+🏷️ ESTADO: ${pedido.estado || 'Pendiente'}
+
+📦 PRODUCTOS:
+${pedido.productos.map((p, i) => `${i + 1}. ${p.nombre} (${p.marca}) - $${parseFloat(p.precio).toFixed(2)}`).join('\n')}
+
+═════════════════════════════════════════
+💰 TOTAL: $${parseFloat(pedido.total).toFixed(2)}
+`;
+
+    alert(detalles);
+  }
+
+  // Actualizar estadísticas
+  function actualizarEstadisticas(pedidos) {
+    const totalPedidos = pedidos.length;
+    const totalVentas = pedidos.reduce((sum, p) => sum + parseFloat(p.total), 0);
+
+    document.getElementById('total-pedidos').textContent = totalPedidos;
+    document.getElementById('total-ventas').textContent = '$' + totalVentas.toFixed(2);
+  }
+
+  // Recargar pedidos
+  function recargarPedidos() {
+    document.getElementById('filtro-estado').value = '';
+    document.getElementById('search-pedidos').value = '';
+    mostrarPedidos();
+  }
+
+  // Logout
+  function logout() {
+    localStorage.removeItem('usuario');
+    window.location.replace('index.html');
+  }
+
+  // Inicializar al cargar
+  window.addEventListener('load', () => {
+    mostrarPedidos();
+  });
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Pedidos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .success {
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Test de Pedidos</h1>
+    
+    <div class="section">
+      <h2>Usuario Actual</h2>
+      <button onclick="mostrarUsuario()">Ver Usuario</button>
+      <pre id="usuario-info"></pre>
+    </div>
+
+    <div class="section">
+      <h2>LocalStorage</h2>
+      <button onclick="verLocalStorage()">Ver Pedidos en LocalStorage</button>
+      <pre id="localStorage-info"></pre>
+    </div>
+
+    <div class="section">
+      <h2>Backend - Todos los Pedidos</h2>
+      <button onclick="verTodosPedidos()">Ver Todos los Pedidos (Backend)</button>
+      <pre id="backend-todos"></pre>
+    </div>
+
+    <div class="section">
+      <h2>Backend - Pedidos del Usuario</h2>
+      <button onclick="verPedidosUsuario()">Ver Mis Pedidos (Backend)</button>
+      <pre id="backend-usuario"></pre>
+    </div>
+
+    <div class="section">
+      <h2>Crear Pedido de Prueba</h2>
+      <button onclick="crearPedidoPrueba()">Crear Pedido de Prueba</button>
+      <pre id="crear-pedido"></pre>
+    </div>
+
+    <div class="section">
+      <h2>Actualizar Emails de Pedidos Antiguos</h2>
+      <button onclick="actualizarEmails()">Actualizar Emails de Mis Pedidos</button>
+      <pre id="actualizar-emails"></pre>
+    </div>
+
+    <div class="section">
+      <button onclick="window.location.href='profile.html'" style="background: #2196F3;">Ir al Perfil</button>
+      <button onclick="limpiarLocalStorage()" style="background: #f44336;">Limpiar LocalStorage</button>
+    </div>
+  </div>
+
+  <script>
+    function mostrarUsuario() {
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      document.getElementById('usuario-info').textContent = JSON.stringify(usuario, null, 2);
+    }
+
+    function verLocalStorage() {
+      const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+      document.getElementById('localStorage-info').innerHTML = 
+        `<span class="success">Total: ${pedidos.length} pedidos</span>\n` +
+        JSON.stringify(pedidos, null, 2);
+    }
+
+    async function verTodosPedidos() {
+      try {
+        const response = await fetch('http://localhost:3000/api/orders');
+        const pedidos = await response.json();
+        document.getElementById('backend-todos').innerHTML = 
+          `<span class="success">Total: ${pedidos.length} pedidos en backend</span>\n` +
+          JSON.stringify(pedidos, null, 2);
+      } catch (error) {
+        document.getElementById('backend-todos').innerHTML = 
+          `<span class="error">Error: ${error.message}</span>`;
+      }
+    }
+
+    async function verPedidosUsuario() {
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      const email = usuario.email;
+
+      if (!email) {
+        document.getElementById('backend-usuario').innerHTML = 
+          '<span class="error">No hay usuario logueado</span>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/orders/usuario/${encodeURIComponent(email)}`);
+        const pedidos = await response.json();
+        document.getElementById('backend-usuario').innerHTML = 
+          `<span class="success">Email: ${email}</span>\n` +
+          `<span class="success">Total: ${pedidos.length} pedidos</span>\n` +
+          JSON.stringify(pedidos, null, 2);
+      } catch (error) {
+        document.getElementById('backend-usuario').innerHTML = 
+          `<span class="error">Error: ${error.message}</span>`;
+      }
+    }
+
+    async function crearPedidoPrueba() {
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      
+      const pedidoPrueba = {
+        id: 'PED-' + Date.now(),
+        cliente: usuario.nombre || 'Cliente Prueba',
+        email: usuario.email || 'prueba@test.com',
+        telefono: usuario.telefono || '0999999999',
+        direccion: usuario.direccion || { callePrincipal: 'Calle Test' },
+        productos: [
+          { nombre: 'Producto Test', precio: 25.50, cantidad: 1 }
+        ],
+        total: 25.50,
+        estado: 'pendiente',
+        fecha: new Date().toISOString()
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(pedidoPrueba)
+        });
+        
+        const result = await response.json();
+        document.getElementById('crear-pedido').innerHTML = 
+          `<span class="success">Pedido creado exitosamente</span>\n` +
+          JSON.stringify(result, null, 2);
+      } catch (error) {
+        document.getElementById('crear-pedido').innerHTML = 
+          `<span class="error">Error: ${error.message}</span>`;
+      }
+    }
+
+    function limpiarLocalStorage() {
+      if (confirm('¿Seguro que quieres limpiar el localStorage?')) {
+        localStorage.removeItem('pedidos');
+        alert('LocalStorage limpiado');
+      }
+    }
+
+    async function actualizarEmails() {
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      
+      if (!usuario.email || !usuario.nombre) {
+        document.getElementById('actualizar-emails').innerHTML = 
+          '<span class="error">No hay usuario logueado</span>';
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/orders/actualizar-email', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cliente: usuario.nombre,
+            email: usuario.email
+          })
+        });
+        
+        const result = await response.json();
+        document.getElementById('actualizar-emails').innerHTML = 
+          `<span class="success">✅ ${result.mensaje}</span>\n` +
+          `<span class="success">Pedidos actualizados: ${result.modificados}</span>`;
+        
+        // Recargar pedidos después de actualizar
+        setTimeout(() => {
+          verPedidosUsuario();
+        }, 1000);
+      } catch (error) {
+        document.getElementById('actualizar-emails').innerHTML = 
+          `<span class="error">Error: ${error.message}</span>`;
+      }
+    }
+
+    // Auto-cargar info al inicio
+    window.onload = () => {
+      mostrarUsuario();
+      verLocalStorage();
+    };
+  </script>
+  <script src="audit.js"></script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+{
+  "sistema": "SofiShop - Autenticación y Recuperación de Contraseña",
+  "version": "1.0",
+  "estado": "✅ Producción",
+  "fecha": "2026",
+  
+  "paginas_frontend": {
+    "login": {
+      "ruta": "http://localhost:3000/login.html",
+      "descripcion": "Página de inicio de sesión",
+      "funcionalidad": [
+        "Ingresar email y contraseña",
+        "Enlace a 'Olvidé mi contraseña'",
+        "Enlace a 'Registrarse'"
+      ]
+    },
+    "register": {
+      "ruta": "http://localhost:3000/register.html",
+      "descripcion": "Página de registro de usuario",
+      "funcionalidad": [
+        "Crear nueva cuenta",
+        "Envío automático de email de verificación",
+        "Validación de email único"
+      ]
+    },
+    "forgot_password": {
+      "ruta": "http://localhost:3000/forgot-password.html",
+      "descripcion": "Solicitar recuperación de contraseña",
+      "funcionalidad": [
+        "Ingresar email registrado",
+        "Genera token de recuperación (1 hora)",
+        "Envía email con enlace de reset"
+      ]
+    },
+    "reset_password": {
+      "ruta": "http://localhost:3000/reset-password.html?token=xxxxx",
+      "descripcion": "Restablecer contraseña",
+      "funcionalidad": [
+        "Validar token de recuperación",
+        "Establecer nueva contraseña",
+        "Hashear y guardar en BD"
+      ]
+    },
+    "verify_email": {
+      "ruta": "http://localhost:3000/verify-email.html?token=xxxxx",
+      "descripcion": "Verificar email de usuario",
+      "funcionalidad": [
+        "Validar token automáticamente",
+        "Marcar email como verificado",
+        "Activar cuenta para uso"
+      ]
+    },
+    "test": {
+      "ruta": "http://localhost:3000/test-recuperacion.html",
+      "descripcion": "Página de pruebas del sistema",
+      "funcionalidad": [
+        "Probar envío de emails",
+        "Acceso rápido a todas las rutas",
+        "Información de usuarios de prueba"
+      ]
+    }
+  },
+
+  "endpoints_api": {
+    "auth_base": "http://localhost:3000/api/auth",
+    
+    "register": {
+      "metodo": "POST",
+      "ruta": "/register",
+      "descripcion": "Registrar nuevo usuario",
+      "request": {
+        "nombre": "string (requerido)",
+        "email": "string (requerido, único)",
+        "password": "string (requerido, min 6 caracteres)",
+        "rol": "string (opcional: 'cliente' o 'admin')"
+      },
+      "response_exitoso": {
+        "codigo": 200,
+        "cuerpo": {
+          "mensaje": "Usuario registrado correctamente. Por favor verifica tu correo para activar tu cuenta.",
+          "usuario": {
+            "id": "ObjectId",
+            "nombre": "string",
+            "email": "string",
+            "rol": "string"
+          }
+        }
+      },
+      "detalles": "Se envía email de verificación automáticamente"
+    },
+
+    "login": {
+      "metodo": "POST",
+      "ruta": "/login",
+      "descripcion": "Iniciar sesión",
+      "request": {
+        "email": "string (requerido)",
+        "password": "string (requerido)"
+      },
+      "response_exitoso": {
+        "codigo": 200,
+        "cuerpo": {
+          "mensaje": "Login exitoso",
+          "usuario": {
+            "id": "ObjectId",
+            "nombre": "string",
+            "email": "string",
+            "rol": "string",
+            "emailVerified": "boolean"
+          }
+        }
+      },
+      "detalles": "Retorna emailVerified para validar si el usuario verificó su correo"
+    },
+
+    "forgot_password": {
+      "metodo": "POST",
+      "ruta": "/forgot-password",
+      "descripcion": "Solicitar recuperación de contraseña",
+      "request": {
+        "email": "string (requerido, debe estar registrado)"
+      },
+      "response_exitoso": {
+        "codigo": 200,
+        "cuerpo": {
+          "mensaje": "Se ha enviado un correo de recuperación a tu email"
+        }
+      },
+      "detalles": [
+        "Genera UUID token válido por 1 hora",
+        "Envía email con enlace reset-password.html?token=xxxxx",
+        "No revela si el email existe o no por seguridad"
+      ]
+    },
+
+    "reset_password": {
+      "metodo": "POST",
+      "ruta": "/reset-password",
+      "descripcion": "Restablecer contraseña con token",
+      "request": {
+        "token": "string (requerido, UUID válido)",
+        "newPassword": "string (requerido, min 6 caracteres)"
+      },
+      "response_exitoso": {
+        "codigo": 200,
+        "cuerpo": {
+          "mensaje": "Contraseña actualizada correctamente"
+        }
+      },
+      "validaciones": [
+        "Token debe existir en BD",
+        "Token no debe estar expirado (resetTokenExpire > ahora)",
+        "Nueva contraseña mínimo 6 caracteres",
+        "Contraseña se hashea con bcryptjs"
+      ],
+      "efectos_secundarios": [
+        "Se elimina resetToken de BD",
+        "Se elimina resetTokenExpire de BD"
+      ]
+    },
+
+    "verify_email": {
+      "metodo": "POST",
+      "ruta": "/verify-email",
+      "descripcion": "Verificar email del usuario",
+      "request": {
+        "token": "string (requerido, UUID de verificación)"
+      },
+      "response_exitoso": {
+        "codigo": 200,
+        "cuerpo": {
+          "mensaje": "Email verificado correctamente. Ya puedes usar tu cuenta."
+        }
+      },
+      "validaciones": [
+        "Token debe existir en BD",
+        "Token debe coincidir con verificationToken del usuario"
+      ],
+      "efectos_secundarios": [
+        "Se establece emailVerified = true",
+        "Se elimina verificationToken de BD"
+      ]
+    }
+  },
+
+  "esquema_usuario_actualizado": {
+    "campos_basicos": {
+      "nombre": "string",
+      "email": "string (único)",
+      "password": "string (hasheado)"
+    },
+    "campos_autenticacion": {
+      "rol": "string ('admin' | 'cliente')",
+      "emailVerified": "boolean (default: false)",
+      "createdAt": "Date"
+    },
+    "campos_recuperacion": {
+      "resetToken": "string (UUID, opcional)",
+      "resetTokenExpire": "Date (opcional)",
+      "verificationToken": "string (UUID, opcional)"
+    }
+  },
+
+  "usuarios_prueba": [
+    {
+      "email": "compras.sofishop@gmail.com",
+      "password": "Sofia2022...",
+      "rol": "admin",
+      "descripcion": "Cuenta de administrador principal",
+      "permisos": [
+        "Ver dashboard",
+        "Crear productos",
+        "Gestionar usuarios",
+        "Crear otros admins"
+      ]
+    },
+    {
+      "email": "deliaenriquez150305@gmail.com",
+      "password": "usuario123",
+      "rol": "cliente",
+      "descripcion": "Cuenta de cliente normal",
+      "permisos": [
+        "Navegación de catálogo",
+        "Realizar compras",
+        "Ver perfil"
+      ]
+    }
+  ],
+
+  "configuracion_email": {
+    "proveedor": "Gmail",
+    "metodo": "SMTP OAuth",
+    "archivo_configuracion": ".env",
+    "variables": {
+      "EMAIL_USER": "compras.sofishop@gmail.com",
+      "EMAIL_PASSWORD": "esyz ffcc hhsv ugss (app password, no contraseña regular)",
+      "SERVER_URL": "http://localhost:3000"
+    },
+    "plantillas": {
+      "recuperacion": {
+        "asunto": "🔐 Recupera tu contraseña - SofiShop",
+        "contenido": "HTML con botón de recuperación",
+        "duracion_token": "1 hora",
+        "enlace": "reset-password.html?token=xxxxx"
+      },
+      "verificacion": {
+        "asunto": "✉️ Verifica tu correo - SofiShop",
+        "contenido": "HTML con botón de verificación",
+        "duracion_token": "indefinida",
+        "enlace": "verify-email.html?token=xxxxx"
+      }
+    }
+  },
+
+  "seguridad": {
+    "contraseñas": {
+      "algoritmo": "bcryptjs",
+      "salt": 10,
+      "nunca_texto_plano": true
+    },
+    "tokens": {
+      "algoritmo": "UUID v4",
+      "criptografia": "Criptográficamente seguro",
+      "recuperacion_expira": "1 hora",
+      "verificacion_expira": "indefinida"
+    },
+    "credenciales_email": {
+      "almacenamiento": "Variables de entorno (.env)",
+      "nunca_hardcoded": true,
+      "incluir_gitignore": true
+    },
+    "validaciones": {
+      "tokens_antes_usar": true,
+      "expiracion_en_bd": true,
+      "admin_autorizado": true
+    }
+  },
+
+  "archivos_modificados": [
+    "backend/models/User.js",
+    "backend/routes/auth.routes.js",
+    "backend/package.json",
+    "backend/.env",
+    "frontend/login.html"
+  ],
+
+  "archivos_creados": [
+    "backend/services/emailService.js",
+    "backend/.env.example",
+    "frontend/forgot-password.html",
+    "frontend/reset-password.html",
+    "frontend/verify-email.html",
+    "frontend/test-recuperacion.html",
+    "docs/PASSWORD_RECOVERY_GUIDE.md",
+    "docs/IMPLEMENTATION_STATUS.txt"
+  ],
+
+  "flujos_completos": {
+    "recuperacion_contraseña": [
+      "Usuario abre forgot-password.html",
+      "Ingresa email y hace click en 'Enviar'",
+      "POST /api/auth/forgot-password genera token",
+      "Email se envía con enlace personalizado",
+      "Usuario hace click en email",
+      "Se abre reset-password.html?token=xxxxx",
+      "Usuario ingresa nueva contraseña",
+      "POST /api/auth/reset-password valida y actualiza",
+      "Usuario puede login con nueva contraseña"
+    ],
+    "verificacion_email": [
+      "Usuario completa formulario en register.html",
+      "POST /api/auth/register crea usuario y genera token",
+      "Email de verificación se envía automáticamente",
+      "Usuario hace click en email",
+      "Se abre verify-email.html?token=xxxxx",
+      "Página automáticamente valida token",
+      "POST /api/auth/verify-email marca como verificado",
+      "Usuario puede usar cuenta completamente"
+    ]
+  },
+
+  "proximas_mejoras_opcionales": [
+    "OAuth2 con Google",
+    "OAuth2 con Microsoft",
+    "Autenticación de dos factores (2FA)",
+    "Integración con SendGrid",
+    "Integración con AWS SES",
+    "Dashboard de administración",
+    "Sistema de notificaciones en tiempo real",
+    "Logs de actividad detallados"
+  ],
+
+  "testing": {
+    "url_pruebas": "http://localhost:3000/test-recuperacion.html",
+    "permite": [
+      "Probar envío de emails",
+      "Acceso a todas las páginas",
+      "Información de usuarios de prueba",
+      "Links rápidos"
+    ]
+  }
+}

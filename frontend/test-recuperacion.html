@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test - Sistema de Recuperación</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 { color: #20B997; }
+    h2 { color: #0B5345; font-size: 18px; margin-top: 0; }
+
+    .test-case {
+      margin: 15px 0;
+      padding: 10px;
+      background: #f9f9f9;
+      border-left: 4px solid #20B997;
+    }
+
+    button {
+      background: #20B997;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 5px 5px 5px 0;
+    }
+
+    button:hover { background: #17a2a2; }
+
+    .response {
+      background: #f0f8f7;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: monospace;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .success { border-left-color: #28a745; }
+    .error { border-left-color: #dc3545; }
+  </style>
+</head>
+<body>
+  <h1>🔐 Test - Sistema de Recuperación de Contraseña</h1>
+
+  <div class="test-section">
+    <h2>1. Solicitar Recuperación de Contraseña</h2>
+    <div class="test-case">
+      <p>Email: <strong>deliaenriquez150305@gmail.com</strong></p>
+      <button onclick="testForgotPassword('deliaenriquez150305@gmail.com')">
+        📧 Enviar Solicitud
+      </button>
+      <div id="forgotResponse" class="response" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>2. Rutas Frontend Disponibles</h2>
+    <div class="test-case">
+      <p>✅ <strong>forgot-password.html</strong> - Solicitar recuperación</p>
+      <button onclick="window.open('forgot-password.html', '_blank')">
+        Abrir Página
+      </button>
+    </div>
+    <div class="test-case">
+      <p>✅ <strong>reset-password.html</strong> - Restablecer contraseña (requiere token)</p>
+      <button onclick="testResetPasswordPage()">
+        Ir a Página de Reset
+      </button>
+    </div>
+    <div class="test-case">
+      <p>✅ <strong>verify-email.html</strong> - Verificar email (requiere token)</p>
+      <button onclick="testVerifyEmailPage()">
+        Ir a Página de Verificación
+      </button>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>3. Información de Usuarios</h2>
+    <div class="test-case">
+      <p><strong>Admin:</strong> compras.sofishop@gmail.com / Sofia2022...</p>
+      <p><strong>Cliente:</strong> deliaenriquez150305@gmail.com / usuario123</p>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>4. Flujo de Recuperación</h2>
+    <ol>
+      <li>Usuario ingresa email en <strong>forgot-password.html</strong></li>
+      <li>Backend genera token de recuperación (1 hora validez)</li>
+      <li>Se envía email con enlace: <code>reset-password.html?token=xxxxx</code></li>
+      <li>Usuario abre enlace y establece nueva contraseña</li>
+      <li>Backend valida token y actualiza contraseña</li>
+      <li>Usuario puede iniciar sesión con nueva contraseña</li>
+    </ol>
+  </div>
+
+  <script>
+    async function testForgotPassword(email) {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+        const responseDiv = document.getElementById('forgotResponse');
+        responseDiv.style.display = 'block';
+
+        if (response.ok) {
+          responseDiv.className = 'response success';
+          responseDiv.innerHTML = `
+            <strong>✅ Éxito:</strong><br>
+            ${data.mensaje}<br><br>
+            <strong>Token generado y email enviado</strong><br>
+            (Revisa tu email para el enlace de recuperación)
+          `;
+        } else {
+          responseDiv.className = 'response error';
+          responseDiv.innerHTML = `
+            <strong>❌ Error:</strong><br>
+            ${data.mensaje}
+          `;
+        }
+      } catch (error) {
+        const responseDiv = document.getElementById('forgotResponse');
+        responseDiv.style.display = 'block';
+        responseDiv.className = 'response error';
+        responseDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '📧 Enviar Solicitud';
+      }
+    }
+
+    function testResetPasswordPage() {
+      const token = prompt('Ingresa el token de recuperación (o deja vacío para ver página de error):');
+      if (token !== null) {
+        if (token) {
+          window.open(`reset-password.html?token=${token}`, '_blank');
+        } else {
+          window.open('reset-password.html', '_blank');
+        }
+      }
+    }
+
+    function testVerifyEmailPage() {
+      const token = prompt('Ingresa el token de verificación (o deja vacío para ver página de error):');
+      if (token !== null) {
+        if (token) {
+          window.open(`verify-email.html?token=${token}`, '_blank');
+        } else {
+          window.open('verify-email.html', '_blank');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

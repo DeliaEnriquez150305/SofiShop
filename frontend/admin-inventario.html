@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario - SofiShop</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: white;
+      color: #667eea;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-success {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .filters {
+      padding: 20px 30px;
+      background: #f9fafb;
+      border-bottom: 2px solid #e5e7eb;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .filter-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      padding: 10px 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      min-width: 200px;
+    }
+
+    .stats {
+      padding: 20px 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      background: #f9fafb;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-left: 4px solid;
+    }
+
+    .stat-card.total { border-left-color: #3b82f6; }
+    .stat-card.low { border-left-color: #ef4444; }
+    .stat-card.value { border-left-color: #10b981; }
+
+    .stat-card h3 {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .stat-card p {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .table-container {
+      padding: 30px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: #f3f4f6;
+      position: sticky;
+      top: 0;
+    }
+
+    th {
+      padding: 15px;
+      text-align: left;
+      font-weight: 700;
+      color: #374151;
+      border-bottom: 2px solid #e5e7eb;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 15px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    tbody tr {
+      transition: all 0.2s;
+    }
+
+    tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .stock-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .stock-high {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .stock-medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .stock-low {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .stock-input {
+      width: 80px;
+      padding: 8px;
+      border: 2px solid #e5e7eb;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .btn-icon {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .btn-edit {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background: #2563eb;
+    }
+
+    .btn-save {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-save:hover {
+      background: #059669;
+    }
+
+    .product-image {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 60px;
+      color: #9ca3af;
+    }
+
+    .no-data i {
+      font-size: 60px;
+      margin-bottom: 20px;
+      opacity: 0.3;
+    }
+
+    @media print {
+      .header-actions, .filters, .btn-icon { display: none; }
+      .container { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-boxes"></i> Gestión de Inventario</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" onclick="exportarExcel()">
+          <i class="fas fa-file-excel"></i> Exportar Excel
+        </button>
+        <button class="btn btn-success" onclick="window.location.href='add-product.html'">
+          <i class="fas fa-plus"></i> Agregar Producto
+        </button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <label>🔍 Buscar</label>
+        <input type="text" id="searchInput" placeholder="Buscar por nombre..." onkeyup="filtrarTabla()">
+      </div>
+      <div class="filter-group">
+        <label>🏷️ Género</label>
+        <select id="categoriaFilter" onchange="filtrarTabla()">
+          <option value="">Todas</option>
+          <option value="Hombre">Hombre</option>
+          <option value="Mujer">Mujer</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>🏷️ Marca</label>
+        <select id="marcaFilter" onchange="filtrarTabla()">
+          <option value="">Todas</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>📦 Estado Stock</label>
+        <select id="stockFilter" onchange="filtrarTabla()">
+          <option value="">Todos</option>
+          <option value="low">Stock Bajo (≤10)</option>
+          <option value="medium">Stock Medio (11-50)</option>
+          <option value="high">Stock Alto (>50)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card total">
+        <h3>Total Productos</h3>
+        <p id="totalProductos">0</p>
+      </div>
+      <div class="stat-card low">
+        <h3>Stock Bajo (≤10)</h3>
+        <p id="stockBajo">0</p>
+      </div>
+      <div class="stat-card value">
+        <h3>Valor Inventario</h3>
+        <p id="valorTotal">$0</p>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table id="inventarioTable">
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Producto</th>
+            <th>Marca</th>
+            <th>Género</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Valor Total</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="9" class="no-data">
+              <i class="fas fa-spinner fa-spin"></i>
+              <p>Cargando inventario...</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="audit.js"></script>
+  <script>
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuario || usuario.rol !== 'admin') {
+      window.location.href = 'perfumes.html';
+    }
+
+    if (usuario && window.AuditLogger) {
+      AuditLogger.log('Visitó admin de inventario');
+    }
+
+    let productos = [];
+    let productosOriginales = [];
+
+    async function cargarInventario() {
+      try {
+        const res = await fetch('http://localhost:3000/api/products');
+        productos = await res.json();
+        productosOriginales = JSON.parse(JSON.stringify(productos));
+        
+        mostrarInventario(productos);
+        actualizarEstadisticas(productos);
+        actualizarFiltroMarcas();
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('tableBody').innerHTML = `
+          <tr>
+            <td colspan="9" class="no-data">
+              <i class="fas fa-exclamation-triangle"></i>
+              <p>Error al cargar inventario</p>
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function mostrarInventario(items) {
+      const tbody = document.getElementById('tableBody');
+      
+      if (items.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="no-data">
+              <i class="fas fa-box-open"></i>
+              <p>No hay productos en inventario</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = items.map(p => {
+        const stockStatus = p.stock <= 10 ? 'low' : p.stock <= 50 ? 'medium' : 'high';
+        const stockLabel = p.stock <= 10 ? 'Bajo' : p.stock <= 50 ? 'Medio' : 'Alto';
+        const valorTotal = (p.precio * p.stock).toFixed(2);
+        const imagenUrl = p.imagen ? (p.imagen.startsWith('http') ? p.imagen : `http://localhost:3000/uploads/${p.imagen}`) : 'https://via.placeholder.com/50';
+
+        return `
+          <tr data-id="${p._id}">
+            <td><img src="${imagenUrl}" class="product-image" onerror="this.src='https://via.placeholder.com/50'"></td>
+            <td><strong>${p.nombre}</strong></td>
+            <td>${p.marca || '-'}</td>
+            <td>${p.subcategoria || p.categoria || '-'}</td>
+            <td><strong>$${p.precio.toFixed(2)}</strong></td>
+            <td>
+              <input type="number" class="stock-input" id="stock-${p._id}" value="${p.stock}" min="0">
+            </td>
+            <td><span class="stock-badge stock-${stockStatus}">${stockLabel}</span></td>
+            <td><strong>$${valorTotal}</strong></td>
+            <td>
+              <button class="btn-icon btn-save" onclick="actualizarStock('${p._id}')">
+                <i class="fas fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function actualizarEstadisticas(items) {
+      const total = items.length;
+      const stockBajo = items.filter(p => p.stock <= 10).length;
+      const valorTotal = items.reduce((sum, p) => sum + (p.precio * p.stock), 0);
+
+      document.getElementById('totalProductos').textContent = total;
+      document.getElementById('stockBajo').textContent = stockBajo;
+      document.getElementById('valorTotal').textContent = `$${valorTotal.toFixed(2)}`;
+    }
+
+    async function actualizarStock(id) {
+      const nuevoStock = parseInt(document.getElementById(`stock-${id}`).value);
+      
+      if (isNaN(nuevoStock) || nuevoStock < 0) {
+        alert('Stock inválido');
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stock: nuevoStock })
+        });
+
+        if (res.ok) {
+          alert('✅ Stock actualizado correctamente');
+          cargarInventario();
+        } else {
+          alert('❌ Error al actualizar stock');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error de conexión');
+      }
+    }
+
+    function actualizarFiltroMarcas() {
+      const marcaSelect = document.getElementById('marcaFilter');
+      const categoriaSelect = document.getElementById('categoriaFilter');
+      if (!marcaSelect || !categoriaSelect) return;
+
+      const categoria = categoriaSelect.value.toLowerCase();
+      let marcas = [];
+
+      if (categoria === 'mujer') {
+        marcas = ['Carolina Herrera', 'Kathy Perry', 'Ariana Grande', 'Britney Spears', 'Calvin Klein', 'Paris Hilton', 'Afnan', 'Paco Rabanne', 'Hugo Boss'];
+      } else if (categoria === 'hombre') {
+        marcas = ['Bharara', 'Paco Rabanne', 'Hugo Boss', 'Ralph Lauren', 'Lattafa', 'Paris Hilton', 'Calvin Klein', 'Carolina Herrera'];
+      } else {
+        marcas = ['Carolina Herrera', 'Kathy Perry', 'Ariana Grande', 'Britney Spears', 'Calvin Klein', 'Paris Hilton', 'Afnan', 'Paco Rabanne', 'Hugo Boss', 'Bharara', 'Ralph Lauren', 'Lattafa'];
+      }
+
+      const current = marcaSelect.value;
+      marcaSelect.innerHTML = '<option value="">Todas</option>';
+      marcas.forEach(marca => {
+        const option = document.createElement('option');
+        option.value = marca;
+        option.textContent = marca;
+        marcaSelect.appendChild(option);
+      });
+      marcaSelect.value = marcas.includes(current) ? current : '';
+    }
+
+    function filtrarTabla() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const categoria = document.getElementById('categoriaFilter').value.toLowerCase();
+      const stockFilter = document.getElementById('stockFilter').value;
+
+      actualizarFiltroMarcas();
+
+      const marca = document.getElementById('marcaFilter').value.toLowerCase();
+
+      const filtrados = productos.filter(p => {
+        const matchSearch = p.nombre.toLowerCase().includes(searchTerm);
+        const matchCategoria = !categoria || (p.subcategoria || '').toLowerCase().includes(categoria);
+        const matchMarca = !marca || (p.marca || '').toLowerCase() === marca;
+        
+        let matchStock = true;
+        if (stockFilter === 'low') matchStock = p.stock <= 10;
+        if (stockFilter === 'medium') matchStock = p.stock > 10 && p.stock <= 50;
+        if (stockFilter === 'high') matchStock = p.stock > 50;
+
+        return matchSearch && matchCategoria && matchMarca && matchStock;
+      });
+
+      mostrarInventario(filtrados);
+      actualizarEstadisticas(filtrados);
+    }
+
+    function exportarExcel() {
+      let csv = 'Producto,Marca,Categoría,Precio,Stock,Estado,Valor Total\n';
+      
+      productos.forEach(p => {
+        const stockStatus = p.stock <= 10 ? 'Bajo' : p.stock <= 50 ? 'Medio' : 'Alto';
+        const valorTotal = (p.precio * p.stock).toFixed(2);
+        csv += `"${p.nombre}","${p.marca || '-'}","${p.subcategoria || '-'}",${p.precio},${p.stock},${stockStatus},${valorTotal}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `inventario_sofishop_${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+    }
+
+    // Cargar al iniciar
+    cargarInventario();
+  </script>
+</body>
+</html>

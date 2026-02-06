@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administrador - SofiShop</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #20B997;
+      --primary-light: #6FD5C3;
+      --secondary: #0B5345;
+      --accent: #C3FAE8;
+      --text: #2c2c2c;
+      --light-bg: #F1F8F6;
+      --border: #A8E6D5;
+      --shadow: 0 8px 32px rgba(32, 185, 151, 0.12);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--light-bg);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar {
+      background: white;
+      padding: 18px 40px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 35px;
+      flex: 1;
+    }
+
+    .logo {
+      font-size: 1.8em;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, #d46a99 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+      letter-spacing: -0.5px;
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--accent);
+      border-radius: 25px;
+      padding: 12px 20px;
+      width: 350px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .search-box input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      padding: 5px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .search-box input::placeholder {
+      color: #aaa;
+    }
+
+    .search-box input:focus {
+      outline: none;
+    }
+
+    .search-box span {
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .navbar-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn-cart {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(32, 185, 151, 0.3);
+    }
+
+    .nav-btn-cart:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(32, 185, 151, 0.4);
+    }
+
+    .nav-btn-logout {
+      background: #f5f5f5;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .nav-btn-logout:hover {
+      background: var(--accent);
+      border-color: var(--primary);
+    }
+
+    .hero {
+      position: relative;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-content {
+      background: linear-gradient(135deg, var(--primary) 0%, #d46a99 100%);
+      padding: 50px 40px;
+      text-align: center;
+      color: white;
+      z-index: 10;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-content h1 {
+      font-size: 2.8em;
+      margin: 0 0 15px 0;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content p {
+      font-size: 1.05em;
+      margin: 0;
+      opacity: 0.95;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .hero-carousel {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+      background: #f8f9fa;
+    }
+
+    .hero-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+    }
+
+    .hero-dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 20;
+    }
+
+    .hero-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .hero-dot.active {
+      background: white;
+      transform: scale(1.2);
+    }
+
+    .hero-dot:hover {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 50px 30px;
+    }
+
+    .section-title {
+      font-size: 2.8em;
+      margin-top: 20px;
+      margin-bottom: 80px;
+      color: var(--primary);
+      text-align: center;
+      font-style: italic;
+      font-family: 'Brush Script MT', 'Lucida Calligraphy', cursive;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+      .audit-section {
+        margin-top: 40px;
+      }
+
+      .audit-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+      }
+
+      .audit-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: var(--accent);
+        border-bottom: 1px solid var(--border);
+        font-weight: 700;
+        color: var(--secondary);
+      }
+
+      .audit-list {
+        max-height: 420px;
+        overflow-y: auto;
+      }
+
+      .audit-item {
+        padding: 14px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        display: grid;
+        grid-template-columns: 1fr 180px;
+        gap: 10px;
+        align-items: center;
+        font-size: 0.92em;
+      }
+
+      .audit-item:last-child {
+        border-bottom: none;
+      }
+
+      .audit-action {
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .audit-meta {
+        color: #777;
+        font-size: 0.85em;
+      }
+
+      .audit-empty {
+        padding: 40px 20px;
+        text-align: center;
+        color: #999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .audit-empty p {
+        margin: 0;
+        font-size: 0.95em;
+      }
+
+    .view-all {
+      display: none;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 50px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 40px;
+      background: transparent;
+      border-radius: 20px;
+    }
+
+    .category-card {
+      background: linear-gradient(135deg, var(--accent), #f0e8f0);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(32, 185, 151, 0.1);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(32, 185, 151, 0.2);
+      border-color: var(--primary);
+    }
+
+    .category-icon {
+      font-size: 3em;
+      margin-bottom: 15px;
+    }
+
+    .category-card h3 {
+      margin: 10px 0;
+      color: var(--secondary);
+      font-size: 1.5em;
+      font-weight: 700;
+    }
+
+    .category-card p {
+      color: #666;
+      font-size: 0.95em;
+      margin: 0;
+    }
+
+    /* Dropdown para Perfumes */
+    .category-dropdown-parent {
+      position: relative;
+    }
+
+    .category-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      display: none;
+      min-width: 180px;
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .category-dropdown a {
+      display: block;
+      padding: 10px 14px;
+      color: #333;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px solid #eee;
+      font-size: 0.9em;
+    }
+
+    .category-dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .category-dropdown a:hover {
+      background: #f5f5f5;
+      color: var(--primary);
+    }
+
+    .category-dropdown-parent:hover .category-dropdown {
+      display: block;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .product-card {
+      background: linear-gradient(135deg, var(--accent), #E0F8F5);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(32, 185, 151, 0.1);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at top right, rgba(32, 185, 151, 0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(32, 185, 151, 0.2);
+      border-color: var(--primary);
+    }
+
+    .product-card:hover::before {
+      opacity: 1;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 280px;
+      background: linear-gradient(135deg, #F0FDF9, #C3FAE8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-img img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-img img {
+      transform: scale(1.08);
+    }
+
+    .product-info {
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .product-info h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.1em;
+      color: var(--secondary);
+      font-weight: 700;
+      min-height: auto;
+    }
+
+    .product-price {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .product-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, #a8296f 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95em;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 12px rgba(32, 185, 151, 0.25);
+    }
+
+    .product-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(32, 185, 151, 0.35);
+    }
+
+    .footer {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+      margin-top: 80px;
+      border-top: 3px solid var(--primary);
+      background: linear-gradient(135deg, var(--secondary), rgba(61, 40, 23, 0.8));
+      padding: 40px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .footer-links a {
+      color: #bdc3c7;
+      text-decoration: none;
+      font-size: 0.95em;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: 1px solid transparent;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .footer p {
+      color: #95a5a6;
+      font-size: 0.9em;
+      margin: 0;
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="navbar-left">
+    <div class="logo" onclick="window.location.href='admin.html'">✨ SofiShop</div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar fragancias..." onkeyup="buscarProductos()">
+      <span><i class="fas fa-search"></i></span>
+    </div>
+  </div>
+  <div class="navbar-right">
+    <button class="nav-btn nav-btn-cart" onclick="window.location.href='add-product.html'">
+      <i class="fas fa-plus"></i> Agregar
+    </button>
+    <button class="nav-btn nav-btn-cart" onclick="window.location.href='perfumes.html'">
+      <i class="fas fa-flower"></i> Perfumes
+    </button>
+    <button class="nav-btn nav-btn-cart" onclick="window.location.href='admin-activity.html'">
+      <i class="fas fa-clipboard-list"></i> Activity Log
+    </button>
+    <button class="nav-btn nav-btn-logout" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Salir
+    </button>
+  </div>
+</div>
+
+<!-- Hero Carrusel -->
+<div class="hero">
+  <div class="hero-content">
+    <h1>¡Hola, <span id="userName" style="color: #fff;">admin</span>! 👑</h1>
+    <p><span id="userRole" style="display: inline-block; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-size: 0.9em; margin-right: 10px; backdrop-filter: blur(10px);"></span>Gestiona y personaliza los perfumes de tu tienda</p>
+  </div>
+
+  <div class="hero-carousel">
+    <div class="hero-slide active" id="heroSlide0"></div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+
+  <!-- Categorías -->
+  <div class="categories-grid">
+    <div class="category-card" onclick="window.location.href='perfumes.html'">
+      <div class="category-icon">🌸</div>
+      <h3>Perfumes</h3>
+      <p>Fragancias exclusivas</p>
+    </div>
+
+    <div class="category-card" onclick="window.location.href='add-product.html'">
+      <div class="category-icon">➕</div>
+      <h3>Agregar Producto</h3>
+      <p>Crear un nuevo artículo</p>
+    </div>
+  </div>
+
+  <div class="audit-section" id="audit-section" style="margin-top: 50px;">
+    <h2 style="font-size: 1.8em; font-weight: 700; color: var(--secondary); margin-bottom: 25px; text-align: center;">
+      📋 Auditoría de Actividades
+    </h2>
+    <div class="audit-card">
+      <div class="audit-header">
+        <span><i class="fas fa-history"></i> Últimas acciones de usuarios</span>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button onclick="renderAuditLogs()" style="background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: 600;">
+            <i class="fas fa-sync-alt"></i> Recargar
+          </button>
+          <span id="audit-count" style="background: var(--primary); color: white; padding: 6px 12px; border-radius: 12px; font-weight: 700; font-size: 0.9em;">0</span>
+        </div>
+      </div>
+      <div class="audit-list" id="audit-list">
+        <div class="audit-empty">
+          <i class="fas fa-inbox" style="font-size: 3em; color: #ddd; margin-bottom: 10px;"></i>
+          <p>No hay actividades registradas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-links">
+    <a href="perfumes.html">
+      <i class="fas fa-flower"></i> Perfumes
+    </a>
+    <a href="#">
+      <i class="fas fa-undo"></i> Devoluciones
+    </a>
+    <a href="mailto:compras.sofishop@gmail.com">
+      <i class="fas fa-envelope"></i> compras.sofishop@gmail.com
+    </a>
+    <a href="https://wa.me/593984050732?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20sobre%20los%20perfumes%20de%20SofiShop" target="_blank">
+      <i class="fab fa-whatsapp"></i> +593 098 405 0732
+    </a>
+  </div>
+  <p>&copy; 2026 SofiShop. Todos los derechos reservados.</p>
+</div>
+
+<script src="audit.js"></script>
+<script>
+  // Variables del carrusel del hero
+  let currentHeroSlide = 0;
+  const heroImages = [
+    'imagen/CARRUSEL1.png'
+  ];
+
+  // Inicializar carrusel del hero
+  function inicializarHeroCarrusel() {
+    heroImages.forEach((img, index) => {
+      const slide = document.getElementById(`heroSlide${index}`);
+      if (slide) {
+        slide.style.backgroundImage = `url('${img}')`;
+      }
+    });
+    iniciarAutoPlayHero();
+  }
+
+  // Auto-cambiar slides del hero
+  function iniciarAutoPlayHero() {
+    setInterval(() => {
+      cambiarHeroSlide((currentHeroSlide + 1) % heroImages.length);
+    }, 5000); // Cambiar cada 5 segundos
+  }
+
+  // Cambiar slide del hero
+  function cambiarHeroSlide(index) {
+    // Remover clase active de todos
+    document.querySelectorAll('.hero-slide').forEach(slide => {
+      slide.classList.remove('active');
+    });
+    document.querySelectorAll('.hero-dot').forEach(dot => {
+      dot.classList.remove('active');
+    });
+
+    // Agregar clase active al nuevo slide
+    currentHeroSlide = index;
+    document.getElementById(`heroSlide${currentHeroSlide}`).classList.add('active');
+    document.querySelectorAll('.hero-dot')[currentHeroSlide].classList.add('active');
+  }
+
+  // Proteger la página
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+  
+  if (!usuario || usuario.rol !== 'admin') {
+    window.location.href = 'index.html';
+  } else {
+    document.getElementById('userName').textContent = usuario.nombre || 'Administrador';
+    
+    // Mostrar rol del usuario
+    const userRoleElement = document.getElementById('userRole');
+    const rol = usuario.rol || 'admin';
+    if (rol === 'admin') {
+      userRoleElement.textContent = '👑 Admin';
+      userRoleElement.style.background = 'rgba(255, 193, 7, 0.4)';
+    } else {
+      userRoleElement.textContent = '👤 Usuario';
+      userRoleElement.style.background = 'rgba(76, 175, 80, 0.4)';
+    }
+
+    if (window.AuditLogger) {
+      AuditLogger.log('Accedió al panel de admin');
+    }
+
+    renderAuditLogs();
+    setInterval(renderAuditLogs, 5000);
+  }
+
+  function renderAuditLogs() {
+    const auditList = document.getElementById('audit-list');
+    const auditCount = document.getElementById('audit-count');
+    
+    console.log('Renderizando logs...');
+    
+    if (!auditList) {
+      console.error('No se encontró el elemento audit-list');
+      return;
+    }
+    
+    if (!window.AuditLogger) {
+      console.error('AuditLogger no está disponible');
+      auditList.innerHTML = '<div class="audit-empty"><p>Error: Sistema de auditoría no disponible</p></div>';
+      return;
+    }
+
+    const logs = AuditLogger.getLogs();
+    console.log('Logs encontrados:', logs.length);
+    
+    if (auditCount) {
+      auditCount.textContent = logs.length;
+    }
+
+    if (logs.length === 0) {
+      auditList.innerHTML = `
+        <div class="audit-empty">
+          <i class="fas fa-inbox" style="font-size: 3em; color: #ddd; margin-bottom: 10px;"></i>
+          <p>No hay actividades registradas</p>
+          <p style="font-size: 0.85em; color: #aaa;">Navega por las páginas para generar logs</p>
+        </div>
+      `;
+      return;
+    }
+
+    auditList.innerHTML = logs.map(log => {
+      const fecha = new Date(log.fecha);
+      const fechaTexto = isNaN(fecha.getTime())
+        ? 'Fecha inválida'
+        : fecha.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+
+      return `
+        <div class="audit-item">
+          <div>
+            <div class="audit-action">${log.usuario} (${log.rol}) • ${log.accion}</div>
+            <div class="audit-meta">${log.email} • ${log.pagina || 'sin página'}</div>
+          </div>
+          <div class="audit-meta">${fechaTexto}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Inicializar carrusel
+  inicializarHeroCarrusel();
+
+  // Cargar productos destacados
+  async function cargarProductosDestacados() {
+    try {
+      const res = await fetch('http://localhost:3000/api/products?categoria=perfumes');
+      const productos = await res.json();
+      mostrarProductosDestacados(productos.slice(0, 8));
+    } catch (error) {
+      console.error('Error cargando productos:', error);
+    }
+  }
+
+
+  function mostrarProductosDestacados(productos) {
+    const div = document.getElementById('productosDestacados');
+    div.innerHTML = '';
+    
+    productos.forEach(p => {
+      div.innerHTML += `
+        <div class="product-card">
+          <div class="product-img">
+            <img src="${p.imagen ? (p.imagen.startsWith('http') ? p.imagen : 'http://localhost:3000/uploads/' + p.imagen) : 'https://via.placeholder.com/220x200?text=Perfume'}" alt="${p.nombre}">
+          </div>
+          <div class="product-info">
+            <h3>${p.nombre}</h3>
+            <div class="product-price">$${p.precio}</div>
+            <button class="product-btn" onclick="comprar('${p._id}')">Agregar al Carrito</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function comprar(id) {
+    fetch('http://localhost:3000/api/products?categoria=perfumes')
+      .then(res => res.json())
+      .then(data => {
+        const product = data.find(p => p._id === id);
+        if (product) {
+          const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+          carrito.push(product);
+          localStorage.setItem('carrito', JSON.stringify(carrito));
+          alert('Producto agregado al carrito');
+        }
+      });
+  }
+
+  function buscarProductos() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    if (searchTerm.length > 2) {
+      window.location.href = `perfumes.html?search=${searchTerm}`;
+    }
+  }
+
+  function logout() {
+    if (confirm('¿Estás segura de que deseas cerrar sesión?')) {
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('carrito');
+      window.location.replace('index.html');
+    }
+  }
+
+  // Dropdown perfumes
+  const perfumesCard = document.getElementById('perfumesCard');
+  const dropdown = perfumesCard.querySelector('.category-dropdown');
+  perfumesCard.addEventListener('click', (e) => {
+    if (e.target.tagName.toLowerCase() === 'a') return;
+    const visible = dropdown.style.display === 'block';
+    dropdown.style.display = visible ? 'none' : 'block';
+  });
+  document.addEventListener('click', (e) => {
+    if (!perfumesCard.contains(e.target)) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  cargarProductosDestacados();
+</script>
+
+</body>
+</html>

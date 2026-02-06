@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro - SofiShop</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #20B997;
+      --secondary: #0B5345;
+      --text: #2c2c2c;
+    }
+
+    .register-container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .register-container h1 {
+      color: var(--primary);
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .register-container p {
+      color: #666;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .password-requirements {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .requirement {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: #666;
+      transition: all 0.3s ease;
+    }
+
+    .requirement:last-child {
+      margin-bottom: 0;
+    }
+
+    .requirement-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      background: #e0e0e0;
+      color: #999;
+      flex-shrink: 0;
+    }
+
+    .requirement.met {
+      color: #155724;
+    }
+
+    .requirement.met .requirement-icon {
+      background: linear-gradient(135deg, var(--primary) 0%, #0f9f7f 100%);
+      color: white;
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--primary), #0f9f7f);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(32, 185, 151, 0.3);
+      margin-top: 20px;
+    }
+
+    .btn-register:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(32, 185, 151, 0.4);
+    }
+
+    .btn-register:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 14px;
+      display: none;
+      animation: slideInUp 0.4s ease;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.error {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ff1744 100%);
+      color: white;
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      display: block;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      font-weight: 500;
+    }
+
+    .message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .login-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="register-container">
+    <h1>📝 Crear cuenta</h1>
+    <p>Regístrate en SofiShop y disfruta de nuestros perfumes premium</p>
+
+    <form id="register-form" onsubmit="register(event)">
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          placeholder="Tu nombre y apellido" 
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo Electrónico</label>
+        <input 
+          type="email" 
+          id="email" 
+          placeholder="tu@correo.com" 
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input 
+          type="password" 
+          id="password" 
+          placeholder="Crea una contraseña segura" 
+          required
+          oninput="validarContraseña()"
+        >
+        <div class="password-requirements">
+          <div class="requirement" id="req-length">
+            <div class="requirement-icon">✓</div>
+            <span>Mínimo 8 caracteres</span>
+          </div>
+          <div class="requirement" id="req-uppercase">
+            <div class="requirement-icon">✓</div>
+            <span>Una letra mayúscula (A-Z)</span>
+          </div>
+          <div class="requirement" id="req-lowercase">
+            <div class="requirement-icon">✓</div>
+            <span>Una letra minúscula (a-z)</span>
+          </div>
+          <div class="requirement" id="req-number">
+            <div class="requirement-icon">✓</div>
+            <span>Un número (0-9)</span>
+          </div>
+          <div class="requirement" id="req-special">
+            <div class="requirement-icon">✓</div>
+            <span>Un carácter especial (!@#$%)</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-register" id="submit-btn" disabled>Registrarse</button>
+    </form>
+
+    <div class="message" id="message"></div>
+
+    <div class="login-link">
+      ¿Ya tienes cuenta?
+      <a href="login.html">Inicia sesión</a>
+    </div>
+  </div>
+</div>
+
+<script src="audit.js"></script>
+<script>
+function validarContraseña() {
+  const password = document.getElementById('password').value;
+  const submitBtn = document.getElementById('submit-btn');
+
+  const requisitos = {
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+  };
+
+  // Actualizar UI
+  document.getElementById('req-length').classList.toggle('met', requisitos.length);
+  document.getElementById('req-uppercase').classList.toggle('met', requisitos.uppercase);
+  document.getElementById('req-lowercase').classList.toggle('met', requisitos.lowercase);
+  document.getElementById('req-number').classList.toggle('met', requisitos.number);
+  document.getElementById('req-special').classList.toggle('met', requisitos.special);
+
+  // Habilitar botón solo si todos se cumplen
+  const todosValidos = Object.values(requisitos).every(v => v === true);
+  submitBtn.disabled = !todosValidos;
+
+  return todosValidos;
+}
+
+async function register(event) {
+  event.preventDefault();
+
+  if (!validarContraseña()) {
+    return;
+  }
+
+  const nombre = document.getElementById('nombre').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const messageDiv = document.getElementById('message');
+  const submitBtn = document.getElementById('submit-btn');
+
+  if (!nombre || !email || !password) {
+    messageDiv.className = 'message error';
+    messageDiv.textContent = '❌ Por favor completa todos los campos';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = '⏳ Registrando...';
+
+  try {
+    const res = await fetch('http://localhost:3000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, email, password, rol: 'cliente' })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      messageDiv.className = 'message success';
+      messageDiv.textContent = '✅ Registro exitoso. Te redirigiremos al login...';
+      if (window.AuditLogger) {
+        AuditLogger.log('Registro de usuario', { email });
+      }
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 2000);
+    } else {
+      messageDiv.className = 'message error';
+      messageDiv.textContent = '❌ ' + (data.mensaje || data.error || 'Error al registrar');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Registrarse';
+    }
+  } catch (error) {
+    messageDiv.className = 'message error';
+    messageDiv.textContent = '❌ Error de conexión: ' + error.message;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Registrarse';
+  }
+}
+</script>
+
+</body>
+</html>

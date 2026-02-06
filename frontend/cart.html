@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito - SofiShop</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #20B997;
+      --primary-light: #6FD5C3;
+      --secondary: #0B5345;
+      --accent: #C3FAE8;
+      --text: #2c2c2c;
+      --light-bg: #F1F8F6;
+      --border: #A8E6D5;
+      --shadow: 0 8px 32px rgba(32, 185, 151, 0.12);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      background: var(--light-bg);
+      color: var(--text);
+      padding: 24px;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+    }
+
+    .cart-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .cart-header {
+      background: white;
+      padding: 24px 32px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .cart-header h1 {
+      margin: 0;
+      font-size: 2.2em;
+      font-weight: 800;
+      color: var(--secondary);
+      letter-spacing: -0.5px;
+    }
+
+    .cart-header p {
+      margin: 0;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    .cart-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      padding: 12px 20px;
+      border-radius: 25px;
+      border: 1px solid var(--border);
+      background: var(--accent);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(32, 185, 151, 0.15);
+    }
+
+    .cart-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .cart-items {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 200px;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--light-bg);
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .cart-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(32, 185, 151, 0.1);
+    }
+
+    .cart-item img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid var(--border);
+      padding: 6px;
+    }
+
+    .item-info h3 {
+      margin: 0 0 8px;
+      font-size: 1.05em;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .item-info p {
+      margin: 0;
+      color: var(--primary);
+      font-size: 1.1em;
+      font-weight: 700;
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      border: 1px solid var(--border);
+      background: white;
+      color: #e74c3c;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.9em;
+    }
+
+    .btn-ghost:hover {
+      background: #ffe0e0;
+      border-color: #e74c3c;
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+    }
+
+    .cart-summary {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 1.1em;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .total-amount {
+      color: var(--primary);
+      font-size: 1.3em;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      padding: 14px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(32, 185, 151, 0.25);
+      transition: all 0.3s ease;
+      font-size: 1em;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(32, 185, 151, 0.35);
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .alert.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef5350;
+      display: block;
+    }
+
+    .alert.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #66bb6a;
+      display: block;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--primary);
+      padding: 40px 24px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      background: var(--light-bg);
+      font-size: 1.05em;
+      font-weight: 600;
+    }
+
+    /* ESTILOS PARA DIRECCIÓN DE ENTREGA */
+    .delivery-section {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+
+    .delivery-title {
+      font-size: 1.2em;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .delivery-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .delivery-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.9em;
+      color: var(--secondary);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95em;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(32, 185, 151, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .address-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn-use-location {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .cart-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-summary {
+        position: static;
+      }
+
+      .delivery-content {
+        grid-template-columns: 1fr;
+      }
+
+      .address-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 16px; }
+      .cart-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .cart-item {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+          "img info"
+          "btn btn";
+      }
+      .cart-item img { grid-area: img; }
+      .item-info { grid-area: info; }
+      .item-actions { grid-area: btn; justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cart-page">
+    <div class="cart-header">
+      <div>
+        <h1><i class="fas fa-shopping-bag"></i> Mi Carrito</h1>
+      </div>
+      <div class="cart-actions">
+        <button class="btn-secondary" onclick="window.location.href='perfumes.html'"><i class="fas fa-arrow-left"></i> Seguir comprando</button>
+        <button class="btn-secondary" id="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <div class="cart-grid">
+      <div id="carrito-items" class="cart-items"></div>
+      <div id="total" class="cart-summary">
+        <div class="summary-row">
+          <span>Total</span>
+          <span class="total-amount">$<span id="total-precio">0</span></span>
+        </div>
+        <button id="comprar-btn" class="btn-primary" onclick="confirmarPedido()"><i class="fas fa-money-bill-wave"></i> Confirmar Pedido (Efectivo)</button>
+      </div>
+    </div>
+
+    <!-- SECCIÓN DE DIRECCIÓN DE ENTREGA -->
+    <div class="delivery-section">
+      <div class="delivery-title">
+        <i class="fas fa-map-marker-alt"></i> Dirección de Entrega - Riobamba
+      </div>
+      <div class="delivery-content">
+        <div class="delivery-form">
+          <div class="form-group">
+            <label for="clienteNombre">Nombre Completo *</label>
+            <input type="text" id="clienteNombre" placeholder="Ej: Sofía López" required>
+          </div>
+          <div class="form-group">
+            <label for="clienteEmail">Correo Electrónico *</label>
+            <input type="email" id="clienteEmail" placeholder="Ej: sofia@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="callePrincipal">Calle Principal *</label>
+            <input type="text" id="callePrincipal" placeholder="Ej: Calle Primera Constituyente" required>
+          </div>
+          <div class="form-group">
+            <label for="calleSecundaria">Calle Secundaria *</label>
+            <input type="text" id="calleSecundaria" placeholder="Ej: Avenida León Borja" required>
+          </div>
+          <div class="address-grid">
+            <div class="form-group">
+              <label for="ciudad">Ciudad *</label>
+              <select id="ciudad" required>
+                <option value="">Selecciona ciudad</option>
+                <option value="Riobamba">Riobamba</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="provincia">Provincia *</label>
+              <select id="provincia" required>
+                <option value="">Selecciona provincia</option>
+                <option value="Chimborazo">Chimborazo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="referencia">Referencia *</label>
+            <textarea id="referencia" placeholder="Ej: Cerca de la iglesia, esquina con farmacia" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono de Contacto *</label>
+            <input type="tel" id="telefono" placeholder="Ej: 0987654321" pattern="[0-9]{10}" required>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="audit.js"></script>
+  <script>
+    // proteger la página
+    if (!localStorage.getItem('usuario')) {
+      window.location.href = 'index.html';
+    }
+
+    if (window.AuditLogger) {
+      AuditLogger.log('Visitó el carrito');
+    }
+
+    function loadCarrito() {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const div = document.getElementById('carrito-items');
+      div.innerHTML = '';
+      let total = 0;
+
+      if (!carrito.length) {
+        div.innerHTML = '<div class="empty">Tu carrito está vacío. Agrega productos para verlos aquí.</div>';
+        document.getElementById('total-precio').textContent = '0.00';
+        return;
+      }
+
+      carrito.forEach((item, index) => {
+        const precio = Number(item.precio) || 0;
+        const cantidad = item.cantidad || 1;
+        const subtotal = precio * cantidad;
+        total += subtotal;
+        const imagenSrc = item.imagen ? (item.imagen.startsWith('http') ? item.imagen : `http://localhost:3000/uploads/${item.imagen}`) : 'https://via.placeholder.com/200x200?text=Producto';
+        div.innerHTML += `
+          <div class="cart-item" style="display: grid; grid-template-columns: 80px 1fr auto; gap: 15px; align-items: center; padding: 15px; background: white; border-radius: 12px; border: 1px solid #e0e0e0;">
+            <img src="${imagenSrc}" alt="${item.nombre}" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; background: #f5f5f5; padding: 5px;">
+            <div class="item-info">
+              <h3 style="margin: 0 0 8px 0; font-size: 1em; font-weight: 700;">${item.nombre}</h3>
+              <p style="margin: 0; color: #666; font-size: 0.9em;">Precio: <strong style="color: var(--primary);">$${precio.toFixed(2)}</strong></p>
+            </div>
+            <div class="item-actions" style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 6px; background: #f5f5f5; padding: 6px 8px; border-radius: 8px;">
+                <button onclick="cambiarCantidad(${index}, -1)" style="width: 28px; height: 28px; border: none; background: white; color: var(--primary); border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em;">−</button>
+                <input type="number" value="${cantidad}" min="1" onchange="actualizarCantidad(${index}, this.value)" style="width: 40px; text-align: center; border: none; background: transparent; font-weight: 700; font-size: 0.95em; color: var(--text);">
+                <button onclick="cambiarCantidad(${index}, 1)" style="width: 28px; height: 28px; border: none; background: white; color: var(--primary); border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em;">+</button>
+              </div>
+              <span style="font-weight: 700; color: var(--primary); font-size: 1.1em;">$${subtotal.toFixed(2)}</span>
+              <button class="btn-ghost" onclick="remover(${index})" style="padding: 6px 12px; background: #ff6b6b; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600;">Remover</button>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('total-precio').textContent = total.toFixed(2);
+    }
+
+    function cambiarCantidad(index, cambio) {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      if (carrito[index]) {
+        const nuevaCantidad = (carrito[index].cantidad || 1) + cambio;
+        if (nuevaCantidad < 1) return;
+        carrito[index].cantidad = nuevaCantidad;
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        loadCarrito();
+      }
+    }
+
+    function actualizarCantidad(index, nuevaCantidad) {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const cantidad = parseInt(nuevaCantidad) || 1;
+      if (cantidad < 1) return;
+      if (carrito[index]) {
+        carrito[index].cantidad = cantidad;
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        loadCarrito();
+      }
+    }
+
+    function remover(index) {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      carrito.splice(index, 1);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      loadCarrito();
+    }
+
+    function removerProductoPorNombre(nombre) {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const index = carrito.findIndex(item => (item.nombre || '').trim().toLowerCase() === nombre.toLowerCase());
+      if (index === -1) return false;
+      carrito.splice(index, 1);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      return true;
+    }
+
+    function comprar() {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      
+      if (!carrito.length) {
+        alert('El carrito está vacío');
+        return;
+      }
+      
+      const total = carrito.reduce((sum, item) => sum + (Number(item.precio) * (item.cantidad || 1)), 0);
+      
+      const order = {
+        cliente: usuario.nombre || 'Cliente Anónimo',
+        productos: carrito,
+        total: total.toFixed(2)
+      };
+      
+      fetch('http://localhost:3000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert('¡Compra realizada exitosamente! Gracias por tu pedido.');
+        localStorage.removeItem('carrito');
+        loadCarrito();
+        setTimeout(() => {
+          window.location.href = 'perfumes.html';
+        }, 1500);
+      })
+      .catch(error => {
+        console.error('Error al procesar compra:', error);
+        alert('Error al procesar la compra. Por favor intenta de nuevo.');
+      });
+    }
+
+    async function confirmarPedido() {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+      if (!carrito.length) {
+        mostrarError('El carrito está vacío. Agrega productos para continuar.');
+        return;
+      }
+
+      const direccion = guardarDireccion();
+      if (!direccion) return;
+
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      const total = carrito.reduce((sum, item) => sum + (Number(item.precio) * (item.cantidad || 1)), 0);
+
+      const order = {
+        cliente: usuario.nombre || document.getElementById('clienteNombre').value.trim(),
+        email: usuario.email || document.getElementById('clienteEmail').value.trim(),
+        telefono: usuario.telefono || document.getElementById('telefono').value.trim(),
+        productos: carrito,
+        total: parseFloat(total.toFixed(2)),
+        direccion,
+        metodoPago: 'Efectivo' // Método de pago en efectivo
+      };
+
+      try {
+        const res = await fetch('http://localhost:3000/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(order)
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          const mensaje = data.mensaje || 'Error al crear la orden';
+          if (mensaje.includes('Stock insuficiente para')) {
+            const nombre = mensaje.replace('Stock insuficiente para', '').trim();
+            if (nombre) {
+              const actualizado = removerProductoPorNombre(nombre);
+              if (actualizado) {
+                mostrarError(`Se eliminó "${nombre}" por falta de stock. Intenta confirmar nuevamente.`);
+                loadCarrito();
+                return;
+              }
+            }
+          }
+          mostrarError(mensaje);
+          return;
+        }
+
+        // Pedido confirmado exitosamente
+        mostrarExito('✅ Pedido confirmado exitosamente. Pagarás en efectivo al recibir tu producto.');
+        
+        // Limpiar carrito después de 2 segundos
+        setTimeout(() => {
+          localStorage.removeItem('carrito');
+          window.location.href = 'perfumes.html';
+        }, 2500);
+
+      } catch (error) {
+        console.error('Error al confirmar pedido:', error);
+        mostrarError('Error al procesar el pedido. Por favor intenta nuevamente.');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('carrito');
+      window.location.replace('index.html');
+    }
+
+    // Cargar dirección guardada si existe
+    function cargarDireccionGuardada() {
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      if (usuario.nombre) {
+        document.getElementById('clienteNombre').value = usuario.nombre;
+      }
+      if (usuario.email) {
+        document.getElementById('clienteEmail').value = usuario.email;
+      }
+      if (usuario.direccion) {
+        document.getElementById('callePrincipal').value = usuario.direccion.callePrincipal || '';
+        document.getElementById('calleSecundaria').value = usuario.direccion.calleSecundaria || '';
+        document.getElementById('ciudad').value = usuario.direccion.ciudad || 'Riobamba';
+        document.getElementById('provincia').value = usuario.direccion.provincia || 'Chimborazo';
+        document.getElementById('referencia').value = usuario.direccion.referencia || '';
+        document.getElementById('telefono').value = usuario.direccion.telefono || usuario.telefono || '';
+      }
+    }
+
+    function guardarDireccion() {
+      const clienteNombre = document.getElementById('clienteNombre').value.trim();
+      const clienteEmail = document.getElementById('clienteEmail').value.trim();
+      const callePrincipal = document.getElementById('callePrincipal').value.trim();
+      const calleSecundaria = document.getElementById('calleSecundaria').value.trim();
+      const ciudad = document.getElementById('ciudad').value.trim();
+      const provincia = document.getElementById('provincia').value.trim();
+      const referencia = document.getElementById('referencia').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      if (!clienteNombre || !clienteEmail || !callePrincipal || !calleSecundaria || !ciudad || !provincia || !referencia || !telefono) {
+        mostrarError('Por favor completa todos los campos obligatorios');
+        return false;
+      }
+
+      if (ciudad !== 'Riobamba') {
+        mostrarError('Solo realizamos entregas en Riobamba');
+        return false;
+      }
+
+      if (!/^\d{10}$/.test(telefono)) {
+        mostrarError('El teléfono debe tener 10 dígitos');
+        return false;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clienteEmail)) {
+        mostrarError('Ingresa un correo electrónico válido');
+        return false;
+      }
+
+      const direccion = {
+        callePrincipal,
+        calleSecundaria,
+        ciudad,
+        provincia,
+        referencia,
+        telefono,
+        completa: `${callePrincipal} y ${calleSecundaria}, ${ciudad}, ${provincia}`
+      };
+
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      usuario.nombre = clienteNombre;
+      usuario.email = clienteEmail;
+      usuario.direccion = direccion;
+      usuario.telefono = telefono;
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      
+      return direccion;
+    }
+
+    function mostrarError(mensaje) {
+      const alert = document.getElementById('alert');
+      alert.textContent = '✕ ' + mensaje;
+      alert.className = 'alert error';
+      window.scrollTo(0, 0);
+    }
+
+    function mostrarExito(mensaje) {
+      const alert = document.getElementById('alert');
+      alert.textContent = '✓ ' + mensaje;
+      alert.className = 'alert success';
+      window.scrollTo(0, 0);
+    }
+
+    loadCarrito();
+    window.addEventListener('load', cargarDireccionGuardada);
+  </script>
+
+
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-links">
+    <a href="perfumes.html">Perfumes</a>
+    <a href="devoluciones.html">Política de Devoluciones</a>
+    <a href="mailto:deliaenriquez150305@gmail.com"><i class="fas fa-envelope"></i> deliaenriquez150305@gmail.com</a>
+    <a href="https://wa.me/593986346275?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20sobre%20los%20perfumes%20de%20SofiShop" target="_blank"><i class="fab fa-whatsapp"></i> +593 986 346 275</a>
+  </div>
+  <p>&copy; 2026 SofiShop. Todos los derechos reservados.</p>
+</div>
+
+</body>
+</html></content>

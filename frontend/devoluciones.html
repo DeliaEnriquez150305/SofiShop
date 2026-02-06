@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sofishop | Políticas de Devolución</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --primary: #2bbfa0;
+      --secondary: #0e3b32;
+      --accent: #e8faf6;
+      --text: #2b2b2b;
+      --muted: #6f8f88;
+      --bg: #f9fdfc;
+      --border: #d9f2ec;
+      --shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: white;
+      padding: 16px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--secondary);
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links a {
+      margin-left: 28px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 90px 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--secondary);
+    }
+
+    .hero p {
+      margin-top: 18px;
+      font-size: 1.15rem;
+      color: var(--muted);
+    }
+
+    /* SECTION */
+    .section {
+      max-width: 1200px;
+      margin: auto;
+      padding: 80px 40px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-title h2 {
+      font-size: 2.3rem;
+      color: var(--secondary);
+    }
+
+    .section-title p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    /* CARDS */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    .card {
+      background: white;
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    .card h3 {
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+      color: var(--secondary);
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* IMPORTANT BOX */
+    .important-box {
+      background: var(--accent);
+      border-left: 4px solid var(--primary);
+      padding: 24px;
+      border-radius: 14px;
+      margin-top: 60px;
+      font-size: 0.95rem;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: var(--secondary);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .footer p {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .hero h1 {
+        font-size: 2.3rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">Sofi<span>shop</span></div>
+    <nav class="nav-links">
+      <a href="welcome.html">Inicio</a>
+      <a href="perfumes.html">Perfumes</a>
+      <a href="https://wa.me/593984050732?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20sobre%20los%20perfumes%20de%20SofiShop" target="_blank">Contacto</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Políticas de Devolución</h1>
+    <p>
+      En Sofishop cuidamos cada detalle de tu experiencia.
+      Por ello, nuestras políticas de devolución están diseñadas
+      para ofrecer claridad, confianza y tranquilidad.
+    </p>
+  </section>
+
+  <!-- CONTENT -->
+  <section class="section">
+    <div class="section-title">
+      <h2>Condiciones Generales</h2>
+      <p>Lineamientos aplicables a todas las devoluciones</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Productos Elegibles</h3>
+        <p>
+          Las devoluciones solo aplican para perfumes que se encuentren
+          completamente sellados, sin uso y en su empaque original.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Plazo de Solicitud</h3>
+        <p>
+          El cliente dispone de un plazo máximo de 7 días calendario
+          desde la fecha de recepción para solicitar una devolución.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Motivos Aceptados</h3>
+        <p>
+          Se aceptan devoluciones únicamente por defectos de fábrica,
+          errores en el envío o daños ocasionados durante el transporte.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Productos No Retornables</h3>
+        <p>
+          Por razones de higiene y autenticidad, los perfumes abiertos
+          o manipulados no pueden ser devueltos.
+        </p>
+      </div>
+    </div>
+
+    <div class="important-box">
+      Sofishop se reserva el derecho de rechazar cualquier devolución
+      que no cumpla con las condiciones establecidas, garantizando
+      siempre un proceso transparente y justo.
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 Sofishop · Políticas de Devolución</p>
+    <p style="margin-top: 10px;"><i class="fas fa-envelope"></i> compras.sofishop@gmail.com | <a href="https://wa.me/593984050732?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20sobre%20los%20perfumes%20de%20SofiShop" target="_blank" style="color: inherit; text-decoration: none;"><i class="fab fa-whatsapp"></i> +593 098 405 0732</a></p>
+  </footer>
+
+  <script src="audit.js"></script>
+  <script>
+    if (window.AuditLogger) {
+      AuditLogger.log('Visitó la página de devoluciones');
+    }
+  </script>
+
+</body>
+</html>

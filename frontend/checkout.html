@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pago - SofiShop</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #20B997;
+      --primary-light: #6FD5C3;
+      --secondary: #0B5345;
+      --accent: #C3FAE8;
+      --text: #2c2c2c;
+      --light-bg: #F1F8F6;
+      --border: #A8E6D5;
+      --shadow: 0 8px 32px rgba(32, 185, 151, 0.12);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      background: var(--light-bg);
+      color: var(--text);
+      padding: 24px;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+    }
+
+    .checkout-page {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .page-header {
+      background: white;
+      padding: 24px 32px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 2em;
+      font-weight: 800;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.9em;
+    }
+
+    .progress-step {
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: var(--accent);
+      color: var(--text);
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .checkout-section {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .payment-option:hover {
+      border-color: var(--primary);
+      background: var(--light-bg);
+    }
+
+    .payment-option input[type="radio"] {
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+    }
+
+    .payment-option.selected {
+      border-color: var(--primary);
+      background: var(--accent);
+    }
+
+    .payment-option label {
+      flex: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    .payment-icon {
+      font-size: 1.5em;
+      color: var(--primary);
+      width: 30px;
+      text-align: center;
+    }
+
+    .payment-details {
+      margin-top: 20px;
+      padding: 16px;
+      background: var(--light-bg);
+      border-radius: 12px;
+      display: none;
+    }
+
+    .payment-details.show {
+      display: block;
+    }
+
+    .payment-details p {
+      margin: 8px 0;
+      font-size: 0.95em;
+    }
+
+    .order-summary {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95em;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      font-size: 1.2em;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .btn-pay {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      padding: 14px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(32, 185, 151, 0.25);
+      transition: all 0.3s ease;
+      font-size: 1em;
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .btn-pay:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(32, 185, 151, 0.35);
+    }
+
+    .btn-pay:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .alert.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef5350;
+      display: block;
+    }
+
+    .alert.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #66bb6a;
+      display: block;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .spinner {
+      border: 3px solid var(--light-bg);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 900px) {
+      .checkout-grid {
+        grid-template-columns: 1fr;
+      }
+      .order-summary {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="checkout-page">
+    <div class="page-header">
+      <div>
+        <h1><i class="fas fa-lock"></i> Checkout Seguro</h1>
+      </div>
+      <div class="progress-bar">
+        <span class="progress-step active">1. Pago</span>
+        <span>→</span>
+        <span class="progress-step">2. Confirmación</span>
+      </div>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <div class="checkout-grid">
+      <!-- Métodos de Pago -->
+      <div class="checkout-section">
+        <div class="section-title">
+          <i class="fas fa-money-bill-wave"></i> Método de Pago
+        </div>
+
+        <div class="payment-methods">
+          <!-- Efectivo a la Entrega -->
+          <div class="payment-option selected" onclick="selectPayment('efectivo')">
+            <input type="radio" name="payment" value="efectivo" id="efectivo" checked>
+            <label for="efectivo">
+              <div class="payment-icon">💵</div>
+              <div>
+                <div>Efectivo al Recibir</div>
+                <small>Paga cuando recibas tu pedido</small>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Detalles Efectivo -->
+        <div id="efectivo-details" class="payment-details show">
+          <p><strong>✓ Recibirás tu pedido en 2-3 días hábiles</strong></p>
+          <p><strong>✓ Paga directamente al conductor</strong></p>
+          <p><strong>✓ El conductor te entregará tu factura</strong></p>
+          <p><strong>✓ Revisa tu pedido antes de pagar</strong></p>
+        </div>
+      </div>
+
+      <!-- Resumen de Orden -->
+      <div class="order-summary">
+        <div class="section-title">
+          <i class="fas fa-receipt"></i> Resumen
+        </div>
+
+        <div id="order-items"></div>
+
+        <div style="padding: 12px 0; border-top: 2px solid var(--border); margin-top: 8px;">
+          <div class="order-item">
+            <span>Subtotal:</span>
+            <span>$<span id="subtotal">0.00</span></span>
+          </div>
+          <div class="order-item">
+            <span>Envío:</span>
+            <span id="shipping">Gratis</span>
+          </div>
+          <div class="order-total">
+            <span>TOTAL:</span>
+            <span>$<span id="total-amount">0.00</span></span>
+          </div>
+        </div>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p>Procesando tu pedido...</p>
+        </div>
+
+        <button class="btn-pay" id="pay-btn" onclick="procesarPago()">
+          <i class="fas fa-money-bill-wave"></i> Confirmar Pedido
+        </button>
+
+        <button class="btn-pay" id="confirm-btn" style="display: none; background: #4caf50;" onclick="confirmarOrden()">
+          <i class="fas fa-check"></i> Ver Perfumes
+        </button>
+
+        <a href="cart.html" style="text-align: center; margin-top: 8px; color: var(--primary); text-decoration: none; font-weight: 600;">
+          ← Volver al Carrito
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="audit.js"></script>
+  <script>
+    // Proteger la página
+    if (!localStorage.getItem('usuario')) {
+      window.location.href = 'index.html';
+    }
+
+    let metodoPagoSeleccionado = 'efectivo';
+    let ordenActual = null;
+
+    function loadOrderSummary() {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      
+      if (!carrito.length) {
+        alert('El carrito está vacío');
+        window.location.href = 'cart.html';
+        return;
+      }
+
+      let total = 0;
+      let html = '';
+
+      carrito.forEach(item => {
+        const precio = Number(item.precio) || 0;
+        total += precio;
+        html += `
+          <div class="order-item">
+            <span>${item.nombre}</span>
+            <span>$${precio.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      document.getElementById('order-items').innerHTML = html;
+      document.getElementById('subtotal').textContent = total.toFixed(2);
+      document.getElementById('total-amount').textContent = total.toFixed(2);
+    }
+
+    function selectPayment(metodo) {
+      metodoPagoSeleccionado = metodo;
+      document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+      document.querySelector(`[onclick="selectPayment('${metodo}')"]`).classList.add('selected');
+      
+      document.querySelectorAll('.payment-details').forEach(el => el.classList.remove('show'));
+      document.getElementById(`${metodo}-details`).classList.add('show');
+      
+      // Siempre es efectivo ahora
+      document.getElementById('pay-btn').textContent = '✓ Confirmar Pedido';
+    }
+
+    async function crearOrden() {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+      
+      if (!carrito.length) {
+        mostrarError('El carrito está vacío');
+        return null;
+      }
+
+      const total = carrito.reduce((sum, item) => sum + (Number(item.precio) * (item.cantidad || 1)), 0);
+
+      const orden = {
+        cliente: usuario.nombre || 'Cliente Anónimo',
+        email: usuario.email || 'sin-email@sofishop.com',
+        telefono: usuario.telefono || '0987654321',
+        productos: carrito,
+        total: parseFloat(total.toFixed(2)),
+        direccion: usuario.direccion || {
+          callePrincipal: '',
+          calleSecundaria: '',
+          ciudad: 'Riobamba',
+          provincia: 'Chimborazo',
+          referencia: '',
+          telefono: usuario.telefono || '',
+          completa: ''
+        }
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orden)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          mostrarError(data.mensaje || 'Error al crear la orden');
+          return null;
+        }
+
+        return data.pedido;
+      } catch (error) {
+        console.error('Error creando orden:', error);
+        mostrarError('Error de conexión. Intenta de nuevo.');
+        return null;
+      }
+    }
+
+    async function procesarPago() {
+      const btnPay = document.getElementById('pay-btn');
+      const loading = document.getElementById('loading');
+
+      btnPay.disabled = true;
+      loading.classList.add('show');
+
+      try {
+        // Crear la orden
+        const orden = await crearOrden();
+        if (!orden) {
+          btnPay.disabled = false;
+          loading.classList.remove('show');
+          return;
+        }
+
+        ordenActual = orden;
+
+        // Pago en efectivo - confirmar pedido
+        loading.classList.remove('show');
+        btnPay.style.display = 'none';
+        document.getElementById('confirm-btn').style.display = 'block';
+        mostrarExito('✅ Pedido confirmado exitosamente. Pagarás en efectivo al recibir tu producto (2-3 días hábiles).');
+        
+      } catch (error) {
+        console.error('Error:', error);
+        mostrarError('Error procesando pedido');
+        btnPay.disabled = false;
+        loading.classList.remove('show');
+      }
+    }
+
+    function confirmarOrden() {
+      if (ordenActual) {
+        // Limpiar carrito
+        localStorage.removeItem('carrito');
+
+        // Ir a perfumes
+        window.location.href = 'perfumes.html';
+      }
+    }
+
+    function mostrarError(mensaje) {
+      const alert = document.getElementById('alert');
+      alert.textContent = '✕ ' + mensaje;
+      alert.className = 'alert error';
+      window.scrollTo(0, 0);
+    }
+
+    function mostrarExito(mensaje) {
+      const alert = document.getElementById('alert');
+      alert.textContent = '✓ ' + mensaje;
+      alert.className = 'alert success';
+      window.scrollTo(0, 0);
+    }
+
+    // Cargar resumen al iniciar
+    window.addEventListener('load', loadOrderSummary);
+
+    if (window.AuditLogger) {
+      AuditLogger.log('Entró a la página de pago');
+    }
+  </script>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="perfumes.html">Perfumes</a>
+      <a href="devoluciones.html">Política de Devoluciones</a>
+      <a href="mailto:compras.sofishop@gmail.com"><i class="fas fa-envelope"></i> compras.sofishop@gmail.com</a>
+      <a href="https://wa.me/593986346275?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20sobre%20los%20perfumes%20de%20SofiShop" target="_blank"><i class="fab fa-whatsapp"></i> +593 986 346 275</a>
+    </div>
+    <p>&copy; 2026 SofiShop. Todos los derechos reservados.</p>
+  </div>
+
+</body>
+</html>

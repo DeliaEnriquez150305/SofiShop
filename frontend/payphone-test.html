@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prueba PayPhone - SofiShop</title>
+  <style>
+    :root {
+      --primary: #20B997;
+      --secondary: #0B5345;
+      --light-bg: #F1F8F6;
+      --border: #A8E6D5;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--light-bg);
+      padding: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 { color: var(--secondary); }
+    h2 { color: var(--primary); margin-top: 24px; }
+
+    .section {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 8px 8px 8px 0;
+    }
+
+    .btn:hover { opacity: 0.9; }
+    .btn-danger { background: #e74c3c; }
+    .btn-success { background: #27ae60; }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .output {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+    }
+
+    .code {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    .success { color: #27ae60; font-weight: 600; }
+    .error { color: #e74c3c; font-weight: 600; }
+    .info { color: #3498db; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <h1>🧪 Herramienta de Prueba - PayPhone Integration</h1>
+
+  <!-- 1. Crear Orden -->
+  <div class="section">
+    <h2>1️⃣ Crear Orden de Prueba</h2>
+    
+    <label>Email del Cliente:</label>
+    <input type="email" id="email" value="cliente@test.com" placeholder="cliente@test.com">
+
+    <label>Monto Total ($):</label>
+    <input type="number" id="monto" value="99.99" min="0.01" step="0.01">
+
+    <label>Número de Productos:</label>
+    <input type="number" id="cantidad-productos" value="2" min="1">
+
+    <button class="btn" onclick="crearOrden()">📦 Crear Orden</button>
+    <button class="btn btn-danger" onclick="limpiarOrden()">🗑️ Limpiar</button>
+
+    <div id="orden-output" class="output"></div>
+  </div>
+
+  <!-- 2. Procesar Pago PayPhone -->
+  <div class="section">
+    <h2>2️⃣ Procesar Pago con PayPhone</h2>
+
+    <label>ID de Orden (de paso anterior):</label>
+    <input type="text" id="order-id" placeholder="Se llena automáticamente">
+
+    <button class="btn" onclick="procesarPayPhone()">💳 Iniciar Pago PayPhone</button>
+    <button class="btn btn-success" onclick="simularWebhook()">✓ Simular Webhook (Confirmación)</button>
+
+    <div id="payphone-output" class="output"></div>
+  </div>
+
+  <!-- 3. Verificar Estado -->
+  <div class="section">
+    <h2>3️⃣ Verificar Estado del Pago</h2>
+
+    <button class="btn" onclick="verificarEstado()">🔍 Verificar Estado</button>
+    <button class="btn" onclick="obtenerFactura()">📄 Obtener Factura</button>
+
+    <div id="estado-output" class="output"></div>
+  </div>
+
+  <!-- 4. Pruebas de API -->
+  <div class="section">
+    <h2>4️⃣ Pruebas Directas de API</h2>
+
+    <h3>Endpoints Disponibles</h3>
+    <ul>
+      <li><strong>POST</strong> /api/payments/payphone/iniciar</li>
+      <li><strong>POST</strong> /api/payments/webhook</li>
+      <li><strong>GET</strong> /api/payments/estado/:orderId</li>
+      <li><strong>POST</strong> /api/orders (crear orden)</li>
+      <li><strong>GET</strong> /api/orders/:orderId (obtener orden)</li>
+    </ul>
+
+    <h3>Hacer Request Custom</h3>
+    <label>Método (GET/POST):</label>
+    <input type="text" id="custom-method" value="GET" placeholder="GET o POST">
+
+    <label>Endpoint:</label>
+    <input type="text" id="custom-endpoint" value="/api/orders" placeholder="/api/orders">
+
+    <label>Body (JSON, solo para POST):</label>
+    <textarea id="custom-body" rows="4" placeholder="{&#10;  &quot;ejemplo&quot;: &quot;datos&quot;&#10;}"></textarea>
+
+    <button class="btn" onclick="hacerRequestCustom()">🚀 Enviar Request</button>
+
+    <div id="custom-output" class="output"></div>
+  </div>
+
+  <!-- 5. Información -->
+  <div class="section">
+    <h2>ℹ️ Información de Configuración</h2>
+
+    <h3>Credenciales PayPhone</h3>
+    <div class="code">
+ID del Comercio: 0986346275
+Token: Sofia2022
+App ID: 0986346275
+    </div>
+
+    <h3>URLs del Sistema</h3>
+    <div class="code">
+Backend: http://localhost:3000
+Frontend: http://localhost:3000
+API Base: http://localhost:3000/api
+    </div>
+
+    <h3>Estados de Pago</h3>
+    <ul>
+      <li><span class="info">pendiente</span> - Esperando pago</li>
+      <li><span class="info">procesando</span> - Pago en proceso</li>
+      <li><span class="success">completado</span> - Pago exitoso</li>
+      <li><span class="error">fallido</span> - Pago rechazado</li>
+    </ul>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+    let ordenActual = null;
+
+    function log(elementId, mensaje, tipo = 'info') {
+      const output = document.getElementById(elementId);
+      const timestamp = new Date().toLocaleTimeString();
+      const emoji = tipo === 'error' ? '❌' : tipo === 'success' ? '✅' : 'ℹ️';
+      const html = `${emoji} [${timestamp}] ${mensaje}\n`;
+      output.innerHTML += html;
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function limpiar(elementId) {
+      document.getElementById(elementId).innerHTML = '';
+    }
+
+    async function crearOrden() {
+      limpiar('orden-output');
+      const email = document.getElementById('email').value;
+      const monto = document.getElementById('monto').value;
+      const cantidad = document.getElementById('cantidad-productos').value;
+
+      log('orden-output', 'Creando orden...', 'info');
+
+      try {
+        const orden = {
+          cliente: 'Cliente Prueba',
+          email: email,
+          telefono: '0987654321',
+          productos: Array(parseInt(cantidad)).fill({
+            nombre: 'Perfume Test',
+            precio: monto / cantidad,
+            cantidad: 1
+          }),
+          total: parseFloat(monto),
+          direccion: {
+            callePrincipal: 'Calle Principal',
+            calleSecundaria: 'Calle Secundaria',
+            ciudad: 'Riobamba',
+            provincia: 'Chimborazo',
+            referencia: 'Referencia de prueba',
+            telefono: '0987654321',
+            completa: 'Calle Principal y Calle Secundaria, Riobamba, Chimborazo'
+          }
+        };
+
+        const response = await fetch(`${API_URL}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orden)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          ordenActual = data.pedido;
+          document.getElementById('order-id').value = ordenActual._id;
+          log('orden-output', `✓ Orden creada: ${ordenActual._id}`, 'success');
+          log('orden-output', JSON.stringify(ordenActual, null, 2));
+        } else {
+          log('orden-output', `Error: ${data.mensaje}`, 'error');
+        }
+      } catch (error) {
+        log('orden-output', `Error de conexión: ${error.message}`, 'error');
+      }
+    }
+
+    function limpiarOrden() {
+      limpiar('orden-output');
+      document.getElementById('order-id').value = '';
+      ordenActual = null;
+      log('orden-output', 'Orden limpiada', 'success');
+    }
+
+    async function procesarPayPhone() {
+      limpiar('payphone-output');
+      const orderId = document.getElementById('order-id').value;
+
+      if (!orderId) {
+        log('payphone-output', 'Por favor crea una orden primero', 'error');
+        return;
+      }
+
+      log('payphone-output', 'Iniciando pago con PayPhone...', 'info');
+
+      try {
+        const response = await fetch(`${API_URL}/payments/payphone/iniciar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId })
+        });
+
+        const data = await response.json();
+
+        if (data.exito) {
+          log('payphone-output', '✓ Transacción iniciada en PayPhone', 'success');
+          log('payphone-output', JSON.stringify(data.transaccion, null, 2));
+        } else {
+          log('payphone-output', `Error: ${data.mensaje}`, 'error');
+        }
+      } catch (error) {
+        log('payphone-output', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function simularWebhook() {
+      limpiar('payphone-output');
+      const orderId = document.getElementById('order-id').value;
+
+      if (!orderId) {
+        log('payphone-output', 'Por favor crea una orden primero', 'error');
+        return;
+      }
+
+      log('payphone-output', 'Simulando webhook de confirmación...', 'info');
+
+      try {
+        const webhook = {
+          idTransaccion: 'txn_' + Date.now(),
+          monto: ordenActual.total,
+          referencia: orderId,
+          orderId: orderId,
+          estado: 'completado',
+          codigo: 'OK'
+        };
+
+        const response = await fetch(`${API_URL}/payments/webhook`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(webhook)
+        });
+
+        const data = await response.json();
+
+        if (data.exito) {
+          log('payphone-output', '✓ Webhook procesado correctamente', 'success');
+          log('payphone-output', `Estado de pago: ${data.estado}`);
+          log('payphone-output', 'La factura se ha generado automáticamente');
+        } else {
+          log('payphone-output', `Error: ${data.mensaje}`, 'error');
+        }
+      } catch (error) {
+        log('payphone-output', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function verificarEstado() {
+      limpiar('estado-output');
+      const orderId = document.getElementById('order-id').value;
+
+      if (!orderId) {
+        log('estado-output', 'Por favor crea una orden primero', 'error');
+        return;
+      }
+
+      log('estado-output', 'Verificando estado...', 'info');
+
+      try {
+        const response = await fetch(`${API_URL}/payments/estado/${orderId}`);
+        const data = await response.json();
+
+        if (data.exito) {
+          log('estado-output', '✓ Estado obtenido', 'success');
+          log('estado-output', `Estado de Pago: ${data.pago.estado}`);
+          log('estado-output', `Método: ${data.pago.metodo}`);
+          log('estado-output', JSON.stringify(data, null, 2));
+        } else {
+          log('estado-output', `Error: ${data.mensaje}`, 'error');
+        }
+      } catch (error) {
+        log('estado-output', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function obtenerFactura() {
+      limpiar('estado-output');
+      const orderId = document.getElementById('order-id').value;
+
+      if (!orderId) {
+        log('estado-output', 'Por favor crea una orden primero', 'error');
+        return;
+      }
+
+      log('estado-output', 'Obteniendo factura...', 'info');
+
+      try {
+        const response = await fetch(`${API_URL}/orders/${orderId}`);
+        // Nota: Asume que existe este endpoint, si no existe, adaptarlo
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.factura?.generada) {
+            log('estado-output', '✓ Factura disponible', 'success');
+            log('estado-output', `Número: ${data.factura.numero}`);
+            log('estado-output', `Fecha: ${data.factura.fechaGeneracion}`);
+            log('estado-output', JSON.stringify(data.factura, null, 2));
+          } else {
+            log('estado-output', 'Factura aún no generada. Confirma el pago primero.', 'info');
+          }
+        }
+      } catch (error) {
+        log('estado-output', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function hacerRequestCustom() {
+      limpiar('custom-output');
+      const method = document.getElementById('custom-method').value.toUpperCase();
+      const endpoint = document.getElementById('custom-endpoint').value;
+      const body = document.getElementById('custom-body').value;
+
+      log('custom-output', `Enviando ${method} ${endpoint}...`, 'info');
+
+      try {
+        const options = {
+          method: method,
+          headers: { 'Content-Type': 'application/json' }
+        };
+
+        if (method === 'POST' && body) {
+          options.body = body;
+        }
+
+        const response = await fetch(`${API_URL}${endpoint}`, options);
+        const data = await response.json();
+
+        log('custom-output', `Status: ${response.status}`, 'success');
+        log('custom-output', JSON.stringify(data, null, 2));
+      } catch (error) {
+        log('custom-output', `Error: ${error.message}`, 'error');
+      }
+    }
+  </script>
+
+</body>
+</html>

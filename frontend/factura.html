@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Factura - SofiShop</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --primary: #20B997;
+      --secondary: #0B5345;
+      --accent: #C3FAE8;
+      --text: #2c2c2c;
+      --light-bg: #F1F8F6;
+      --border: #A8E6D5;
+      --shadow: 0 8px 32px rgba(32, 185, 151, 0.12);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--light-bg);
+      font-family: 'Century Gothic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      padding: 15px;
+      font-size: 12pt;
+    }
+
+    .factura-container {
+      width: 148mm;
+      margin: 0 auto;
+      background: white;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: visible;
+    }
+
+    .factura-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 6mm 8mm;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .factura-header h1 {
+      font-size: 1.4em;
+      margin: 0;
+      padding: 0;
+      letter-spacing: 0px;
+      line-height: 1.2;
+    }
+
+    .factura-header p {
+      font-size: 0.85em;
+      margin: 2px 0 0 0;
+      padding: 0;
+      opacity: 0.95;
+    }
+
+    .factura-body {
+      padding: 5mm 6mm;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      font-size: 12pt;
+      line-height: 1.3;
+    }
+
+    .factura-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5mm;
+      margin-bottom: 2mm;
+      padding-bottom: 2mm;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .factura-info-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .factura-info-block h3 {
+      font-size: 0.75em;
+      color: var(--secondary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1px;
+      margin: 0;
+      padding: 0;
+      line-height: 1.2;
+    }
+
+    .factura-info-block p {
+      font-size: 0.85em;
+      color: var(--text);
+      line-height: 1.3;
+      margin: 0;
+      padding: 0;
+    }
+
+    .factura-numero {
+      font-size: 1em;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0;
+      padding: 0;
+      line-height: 1.2;
+    }
+
+    .cliente-dir-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5mm;
+      margin-bottom: 2.5mm;
+      flex-shrink: 0;
+    }
+
+    .factura-cliente {
+      background: var(--light-bg);
+      padding: 2.5mm;
+      border-radius: 1px;
+      border-left: 1px solid var(--primary);
+      font-size: 0.85em;
+    }
+
+    .factura-cliente h3 {
+      color: var(--secondary);
+      margin: 0 0 0.5mm 0;
+      padding: 0;
+      font-size: 0.75em;
+      text-transform: uppercase;
+      letter-spacing: 0.1px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .factura-cliente p {
+      margin: 0.2mm 0;
+      padding: 0;
+      line-height: 1.3;
+    }
+
+    .factura-productos {
+      margin-bottom: 1.5mm;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .factura-productos h3 {
+      color: var(--secondary);
+      margin: 0 0 1mm 0;
+      padding: 0;
+      font-size: 0.9em;
+      font-weight: 700;
+      flex-shrink: 0;
+      line-height: 1.2;
+    }
+
+    .productos-tabla {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8em;
+      flex: 1;
+      line-height: 1.3;
+    }
+
+    .productos-tabla thead {
+      background: var(--light-bg);
+      border-top: 0.5px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .productos-tabla th {
+      padding: 0.8mm 1mm;
+      text-align: left;
+      font-weight: 700;
+      color: var(--secondary);
+      font-size: 0.8em;
+      text-transform: uppercase;
+      letter-spacing: 0.1px;
+      line-height: 1.2;
+    }
+
+    .productos-tabla td {
+      padding: 0.8mm 1mm;
+      border-bottom: 0.5px solid #F0F0F0;
+      line-height: 1.3;
+    }
+
+    .productos-tabla tbody tr:last-child td {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .producto-nombre {
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.3;
+    }
+
+    .producto-marca {
+      font-size: 0.75em;
+      color: #999;
+      margin: 0;
+      padding: 0;
+      line-height: 1.3;
+    }
+
+    .cantidad-centrada {
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .precio-derecha {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .factura-totales {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.5mm;
+      padding-top: 1.5mm;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .totales-box {
+      width: 90px;
+      font-size: 0.85em;
+    }
+
+    .total-fila {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5mm 0;
+      border-bottom: 0.5px solid #F0F0F0;
+      font-size: 0.85em;
+      line-height: 1.3;
+    }
+
+    .total-fila.subtotal {
+      color: #666;
+    }
+
+    .total-fila.impuesto {
+      color: #666;
+    }
+
+    .total-fila.total-general {
+      background: var(--light-bg);
+      padding: 1.5mm;
+      border-radius: 1px;
+      margin-top: 0.3mm;
+      border: none;
+      font-size: 0.95em;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    .factura-nota {
+      margin-top: 1mm;
+      padding: 1.5mm;
+      background: var(--accent);
+      border-left: 0.8px solid var(--primary);
+      border-radius: 1px;
+      font-size: 0.7em;
+      color: var(--secondary);
+      line-height: 1.3;
+      flex-shrink: 0;
+    }
+
+    .factura-acciones {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+      padding: 20px;
+      background: white;
+    }
+
+    .btn-primary, .btn-secondary {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #6FD5C3 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(32, 185, 151, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(32, 185, 151, 0.35);
+    }
+
+    .btn-secondary {
+      background: var(--light-bg);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    @media print {
+      @page {
+        size: 148mm 210mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      html {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+      }
+
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        width: 148mm !important;
+      }
+
+      .factura-container {
+        width: 148mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        page-break-after: never !important;
+        page-break-inside: never !important;
+        page-break-before: never !important;
+        overflow: visible !important;
+      }
+
+      .factura-acciones {
+        display: none !important;
+        page-break-after: never !important;
+      }
+
+      * {
+        page-break-inside: never !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .factura-header {
+        padding: 12px 15px;
+      }
+
+      .factura-header h1 {
+        font-size: 1.5em;
+      }
+
+      .factura-body {
+        padding: 12px 15px;
+      }
+
+      .cliente-dir-box {
+        grid-template-columns: 1fr;
+      }
+
+      .factura-acciones {
+        flex-direction: column;
+      }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="factura-container">
+  <!-- ENCABEZADO -->
+  <div class="factura-header">
+    <h1>✨ FACTURA</h1>
+    <p>SofiShop - Perfumes Premium</p>
+  </div>
+
+  <!-- CUERPO -->
+  <div class="factura-body">
+    
+    <!-- INFO: Número y Fecha -->
+    <div class="factura-info-grid">
+      <div class="factura-info-block">
+        <h3>Nº Factura</h3>
+        <div class="factura-numero" id="numero-factura">F-2026-0001</div>
+      </div>
+      <div class="factura-info-block">
+        <h3>Fecha</h3>
+        <p id="fecha-factura">31 Ene 2026</p>
+      </div>
+      <div class="factura-info-block">
+        <h3>Hora</h3>
+        <p id="hora-factura">14:30</p>
+      </div>
+    </div>
+
+    <!-- CLIENTE Y DIRECCIÓN -->
+    <div class="cliente-dir-box">
+      <div class="factura-cliente">
+        <h3>👤 Cliente</h3>
+        <p style="font-weight: 600; margin-top: 1mm;" id="cliente-nombre">Juan Pérez</p>
+        <p id="cliente-email" style="margin-top: 1mm;">juan@email.com</p>
+      </div>
+      <div class="factura-cliente">
+        <h3>📍 Entrega</h3>
+        <div id="direccion-factura-compacta" style="font-size: 0.78em; line-height: 1.3; margin-top: 1mm;">
+          <!-- Se cargará dinámicamente -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLA DE PRODUCTOS -->
+    <div class="factura-productos">
+      <h3>📦 Productos</h3>
+      
+      <table class="productos-tabla">
+        <thead>
+          <tr>
+            <th style="width: 50%;">Producto</th>
+            <th style="width: 15%; text-align: center;">Cant.</th>
+            <th style="width: 17.5%; text-align: right;">Precio</th>
+            <th style="width: 17.5%; text-align: right;">Total</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-productos">
+          <!-- Se llena con JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TOTALES -->
+    <div class="factura-totales">
+      <div class="totales-box">
+        <div class="total-fila subtotal">
+          <span>Subtotal</span>
+          <span>$<span id="subtotal-valor">0.00</span></span>
+        </div>
+        <div class="total-fila impuesto">
+          <span>IVA (15%)</span>
+          <span>$<span id="iva-valor">0.00</span></span>
+        </div>
+        <div class="total-fila total-general">
+          <span>TOTAL</span>
+          <span>$<span id="total-valor">0.00</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTA -->
+    <div class="factura-nota">
+      ✓ Gracias por tu compra en SofiShop. Conserva este comprobante.
+    </div>
+  </div>
+</div>
+
+<!-- ACCIONES (FUERA DEL CONTENEDOR PARA NO INCLUIRSE EN PDF) -->
+<div class="factura-acciones">
+  <button class="btn-primary" onclick="completarCompra()">
+    <i class="fas fa-check-circle"></i> Completar Compra
+  </button>
+  <button class="btn-primary" onclick="imprimirFactura()">
+    <i class="fas fa-print"></i> Imprimir Factura
+  </button>
+  <button class="btn-secondary" onclick="descargarPDF()">
+    <i class="fas fa-download"></i> Descargar PDF
+  </button>
+  <button class="btn-secondary" onclick="volverAlCarrito()">
+    <i class="fas fa-arrow-left"></i> Volver al Carrito
+  </button>
+</div>
+
+<script>
+  // Verificar sesión
+  if (!localStorage.getItem('usuario')) {
+    window.location.href = 'index.html';
+  }
+
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+  let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+  let pedidoActual = null;
+  let esFacturaCompletada = false;
+
+  // Obtener ID del pedido de la URL (si existe)
+  const urlParams = new URLSearchParams(window.location.search);
+  const pedidoId = urlParams.get('pedido');
+
+  // Generar número de factura único
+  function generarNumeroFactura() {
+    const fecha = new Date();
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const aleatorio = Math.floor(Math.random() * 10000);
+    return `F-${año}-${String(aleatorio).padStart(4, '0')}`;
+  }
+
+  // Llenar información del cliente
+  function llenarCliente() {
+    if (esFacturaCompletada && pedidoActual) {
+      document.getElementById('cliente-nombre').textContent = pedidoActual.cliente || 'Cliente';
+      document.getElementById('cliente-email').textContent = pedidoActual.email || 'No disponible';
+    } else {
+      document.getElementById('cliente-nombre').textContent = usuario.nombre || 'Cliente';
+      document.getElementById('cliente-email').textContent = usuario.email || 'No disponible';
+    }
+    
+    llenarDireccionFactura();
+  }
+
+  // Llenar dirección en la factura
+  function llenarDireccionFactura() {
+    const direccionDiv = document.getElementById('direccion-factura-compacta');
+    let dir = null;
+
+    if (esFacturaCompletada && pedidoActual && pedidoActual.direccion) {
+      dir = pedidoActual.direccion;
+    } else if (usuario.direccion) {
+      dir = usuario.direccion;
+    }
+
+    if (dir && dir.callePrincipal) {
+      direccionDiv.innerHTML = `
+        <p style="margin: 0; font-weight: 600;">${dir.callePrincipal} y ${dir.calleSecundaria}</p>
+        <p style="margin: 1px 0; color: #666;">${dir.ciudad}, ${dir.provincia}</p>
+        ${dir.referencia ? `<p style="margin: 1px 0; color: #999; font-size: 0.7em;">Ref: ${dir.referencia}</p>` : ''}
+        ${dir.telefono ? `<p style="margin: 1px 0; color: #666;">Tel: ${dir.telefono}</p>` : ''}
+      `;
+    } else {
+      direccionDiv.innerHTML = `<p style="margin: 0; color: #e74c3c; font-weight: 600;">⚠️ Sin dirección</p>`;
+    }
+  }
+
+  // Llenar tabla de productos
+  function llenarProductos() {
+    const tbody = document.getElementById('tabla-productos');
+    tbody.innerHTML = '';
+
+    let subtotal = 0;
+    let productos = carrito;
+
+    if (esFacturaCompletada && pedidoActual) {
+      productos = pedidoActual.productos || [];
+    }
+
+    if (productos.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">Carrito vacío</td></tr>';
+      return;
+    }
+
+    productos.forEach((producto, index) => {
+      const cantidad = 1;
+      const precio = parseFloat(producto.precio) || 0;
+      const total = precio * cantidad;
+
+      subtotal += total;
+
+      const fila = `
+        <tr>
+          <td>
+            <div class="producto-nombre">${producto.nombre}</div>
+            <div class="producto-marca">${producto.marca || 'N/A'}</div>
+          </td>
+          <td class="cantidad-centrada">${cantidad}</td>
+          <td class="precio-derecha">$${precio.toFixed(2)}</td>
+          <td class="precio-derecha">$${total.toFixed(2)}</td>
+        </tr>
+      `;
+      tbody.innerHTML += fila;
+    });
+
+    // Calcular IVA (15%) y total
+    const iva = subtotal * 0.15;
+    const total = subtotal + iva;
+
+    document.getElementById('subtotal-valor').textContent = subtotal.toFixed(2);
+    document.getElementById('iva-valor').textContent = iva.toFixed(2);
+    document.getElementById('total-valor').textContent = total.toFixed(2);
+  }
+
+  // Llenar fecha y hora
+  function llenarFechaHora() {
+    const fecha = new Date();
+    
+    if (esFacturaCompletada && pedidoActual) {
+      // Usar fecha del pedido completado
+      const fechaPedido = new Date(pedidoActual.fecha);
+      const opciones = { 
+        day: '2-digit',
+        month: 'short', 
+        year: 'numeric',
+        timeZone: 'America/Bogota'
+      };
+      
+      const fechaFormato = fechaPedido.toLocaleDateString('es-ES', opciones);
+      const hora = fechaPedido.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+      document.getElementById('fecha-factura').textContent = fechaFormato.charAt(0).toUpperCase() + fechaFormato.slice(1);
+      document.getElementById('hora-factura').textContent = hora;
+      document.getElementById('numero-factura').textContent = pedidoActual.id;
+    } else {
+      const opciones = { 
+        day: '2-digit',
+        month: 'short', 
+        year: 'numeric',
+        timeZone: 'America/Bogota'
+      };
+      
+      const fechaFormato = fecha.toLocaleDateString('es-ES', opciones);
+      const hora = fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+      document.getElementById('fecha-factura').textContent = fechaFormato.charAt(0).toUpperCase() + fechaFormato.slice(1);
+      document.getElementById('hora-factura').textContent = hora;
+      
+      const año = fecha.getFullYear();
+      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const dia = String(fecha.getDate()).padStart(2, '0');
+      const aleatorio = Math.floor(Math.random() * 10000);
+      document.getElementById('numero-factura').textContent = `F-${año}-${String(aleatorio).padStart(4, '0')}`;
+    }
+  }
+
+  // Imprimir factura
+  function imprimirFactura() {
+    window.print();
+  }
+
+  // Descargar PDF
+  function descargarPDF() {
+    const elemento = document.querySelector('.factura-container');
+    const nombrePedido = document.getElementById('numero-factura').textContent.replace(/[^0-9]/g, '');
+    const nombreArchivo = `Factura_SofiShop_${nombrePedido}.pdf`;
+
+    const config = {
+      margin: 0,
+      filename: nombreArchivo,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, logging: false, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF: { format: [148, 210], orientation: 'portrait', unit: 'mm', compress: true },
+      pagebreak: { mode: ['avoid-all'] }
+    };
+
+    html2pdf().set(config).from(elemento).save();
+  }
+
+  // Volver al carrito
+  function volverAlCarrito() {
+    window.location.href = 'cart.html';
+  }
+
+  // Volver a home
+  function volverAHome() {
+    window.location.href = 'perfumes.html';
+  }
+
+  // Completar compra
+  function completarCompra() {
+    const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    
+    if (!carrito.length) {
+      alert('El carrito está vacío');
+      return;
+    }
+    
+    const total = carrito.reduce((sum, item) => sum + Number(item.precio), 0);
+    
+    // Crear objeto del pedido
+    const pedido = {
+      id: 'PED-' + Date.now(),
+      cliente: usuario.nombre || 'Cliente Anónimo',
+      email: usuario.email || 'No disponible',
+      telefono: usuario.telefono || (usuario.direccion ? usuario.direccion.telefono : '') || 'No disponible',
+      direccion: usuario.direccion || null,
+      productos: carrito,
+      total: total.toFixed(2),
+      estado: 'pendiente',
+      fecha: new Date().toISOString()
+    };
+    
+    // Guardar pedido en localStorage
+    const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+    pedidos.push(pedido);
+    localStorage.setItem('pedidos', JSON.stringify(pedidos));
+    
+    // Intentar enviar al backend
+    const order = {
+      id: pedido.id,
+      cliente: usuario.nombre || 'Cliente Anónimo',
+      email: usuario.email || 'No disponible',
+      telefono: usuario.telefono || (usuario.direccion ? usuario.direccion.telefono : '') || 'No disponible',
+      direccion: usuario.direccion || null,
+      productos: carrito,
+      total: parseFloat(total.toFixed(2)),
+      estado: 'pendiente',
+      fecha: pedido.fecha
+    };
+    
+    fetch('http://localhost:3000/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order)
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log('Pedido guardado en el backend:', data);
+    })
+    .catch(error => {
+      console.log('Backend no disponible, pedido guardado solo localmente:', error.message);
+    });
+    
+    localStorage.removeItem('carrito');
+    
+    // Redirigir a la factura del pedido completado
+    setTimeout(() => {
+      window.location.href = `factura.html?pedido=${pedido.id}`;
+    }, 500);
+  }
+
+  // Inicializar página
+  window.addEventListener('load', () => {
+    // Si viene un ID de pedido, cargar ese pedido
+    if (pedidoId) {
+      const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+      pedidoActual = pedidos.find(p => p.id === pedidoId);
+      
+      if (pedidoActual) {
+        esFacturaCompletada = true;
+        carrito = pedidoActual.productos || [];
+        
+        // Cambiar el texto del botón de acciones
+        document.querySelector('.factura-acciones').innerHTML = `
+          <button class="btn-primary" onclick="imprimirFactura()">
+            <i class="fas fa-print"></i> Imprimir Factura
+          </button>
+          <button class="btn-secondary" onclick="descargarPDF()">
+            <i class="fas fa-download"></i> Descargar PDF
+          </button>
+          <button class="btn-secondary" onclick="volverAHome()">
+            <i class="fas fa-home"></i> Volver a Home
+          </button>
+        `;
+      }
+    }
+
+    llenarCliente();
+    llenarProductos();
+    llenarFechaHora();
+  });
+</script>
+<script src="audit.js"></script>
+
+</body>
+</html>

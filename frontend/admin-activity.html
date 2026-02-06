@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Activity Log - SofiShop Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #20B997;
+      --secondary: #0B5345;
+      --text: #2c2c2c;
+      --border: #e0e0e0;
+      --bg: #f5f6fa;
+      --accent: #C3FAE8;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .navbar {
+      background: #fff;
+      padding: 18px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    }
+
+    .logo {
+      font-size: 1.6em;
+      font-weight: 800;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      border: none;
+      background: #f1f1f1;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .header {
+      background: #fff;
+      padding: 20px 24px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filters {
+      background: #fff;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filters input, .filters select {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      min-width: 200px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .table-wrap {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      font-weight: 700;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .muted {
+      color: #777;
+      font-size: 12px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo" onclick="location.href='admin.html'">✨ SofiShop Admin</div>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="location.href='admin.html'">Panel</button>
+      <button class="nav-btn" onclick="location.href='admin-pedidos.html'">Pedidos</button>
+      <button class="nav-btn" onclick="location.href='admin-inventario.html'">Inventario</button>
+      <button class="nav-btn" onclick="logout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div>
+        <h2>🧾 Activity Log</h2>
+        <div class="muted">Registro de acciones de usuarios en la app</div>
+      </div>
+      <div>
+        <span class="chip" id="totalLogs">0 registros</span>
+      </div>
+    </div>
+
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="Buscar por usuario, acción, página o email...">
+      <select id="roleFilter">
+        <option value="">Todos los roles</option>
+        <option value="admin">Admin</option>
+        <option value="usuario">Usuario</option>
+      </select>
+      <select id="pageFilter">
+        <option value="">Todas las páginas</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Usuario</th>
+            <th>Acción</th>
+            <th>Página</th>
+            <th>Meta</th>
+          </tr>
+        </thead>
+        <tbody id="logsBody"></tbody>
+      </table>
+      <div class="empty" id="emptyState" style="display:none;">No hay registros para mostrar.</div>
+    </div>
+  </div>
+
+  <script src="audit.js"></script>
+  <script>
+    function logout(){
+      localStorage.removeItem('usuario');
+      location.href='index.html';
+    }
+
+    function requireAdmin() {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      if (!usuario || usuario.rol !== 'admin') {
+        location.href = 'index.html';
+        return false;
+      }
+      return true;
+    }
+
+    function renderLogs(logs) {
+      const body = document.getElementById('logsBody');
+      const empty = document.getElementById('emptyState');
+      body.innerHTML = '';
+
+      if (!logs.length) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      logs.forEach(l => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div>${new Date(l.fecha).toLocaleString()}</div>
+            <div class="muted">${l.email || ''}</div>
+          </td>
+          <td>
+            <div><strong>${l.usuario || ''}</strong></div>
+            <div class="muted">${l.rol || ''}</div>
+          </td>
+          <td>${l.accion || ''}</td>
+          <td>${l.pagina || ''}</td>
+          <td class="muted">${l.meta ? JSON.stringify(l.meta).slice(0, 200) : ''}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function initFilters(logs) {
+      const pageFilter = document.getElementById('pageFilter');
+      const pages = [...new Set(logs.map(l => l.pagina).filter(Boolean))].sort();
+      pages.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p;
+        opt.textContent = p;
+        pageFilter.appendChild(opt);
+      });
+    }
+
+    function applyFilters() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      const role = document.getElementById('roleFilter').value;
+      const page = document.getElementById('pageFilter').value;
+
+      const logs = (window.AuditLogger && AuditLogger.getLogs()) ? AuditLogger.getLogs() : [];
+      const filtered = logs.filter(l => {
+        const hay = [l.usuario, l.email, l.accion, l.pagina].join(' ').toLowerCase();
+        const matchTerm = !term || hay.includes(term);
+        const matchRole = !role || (l.rol || '') === role;
+        const matchPage = !page || (l.pagina || '') === page;
+        return matchTerm && matchRole && matchPage;
+      });
+
+      document.getElementById('totalLogs').textContent = `${filtered.length} registros`;
+      renderLogs(filtered);
+    }
+
+    if (requireAdmin()) {
+      const logs = (window.AuditLogger && AuditLogger.getLogs()) ? AuditLogger.getLogs() : [];
+      document.getElementById('totalLogs').textContent = `${logs.length} registros`;
+      initFilters(logs);
+      renderLogs(logs);
+
+      document.getElementById('searchInput').addEventListener('input', applyFilters);
+      document.getElementById('roleFilter').addEventListener('change', applyFilters);
+      document.getElementById('pageFilter').addEventListener('change', applyFilters);
+    }
+  </script>
+</body>
+</html>
