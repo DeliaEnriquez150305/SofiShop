@@ -1,5 +1,11 @@
+// ============================================
+// MODELO DE PEDIDO
+// ============================================
+// Define la estructura de los pedidos realizados por los clientes
+
 const mongoose = require('mongoose');
 
+// Schema del pedido con todos sus campos
 const OrderSchema = new mongoose.Schema({
   id: String,
   cliente: String,

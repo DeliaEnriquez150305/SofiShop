@@ -1,34 +1,57 @@
+// ============================================
+// SCRIPT DE INICIALIZACIÓN DE BASE DE DATOS (SEED)
+// ============================================
+// Este script puebla la base de datos con datos iniciales:
+// - 2 usuarios (1 admin y 1 cliente)
+// - 180 productos de perfumes (90 para hombre, 90 para mujer)
+// 
+// CÓMO USAR:
+// node seed.js
+//
+// ADVERTENCIA: Este script elimina todos los datos existentes
+// ============================================
+
 const mongoose = require('mongoose');
 const bcryptjs = require('bcryptjs');
 require('dotenv').config();
 
-// Modelos
+// Importar modelos de datos
 const User = require('./models/User');
 const Product = require('./models/Product');
 
+/**
+ * Conecta a la base de datos MongoDB
+ */
 const connectDB = async () => {
   try {
     await mongoose.connect('mongodb://127.0.0.1:27017/SofiShop');
-    console.log('MongoDB conectado');
+    console.log('✅ MongoDB conectado');
   } catch (error) {
-    console.error('Error al conectar MongoDB', error);
+    console.error('❌ Error al conectar MongoDB', error);
     process.exit(1);
   }
 };
 
+/**
+ * Función principal que puebla la base de datos
+ */
 const seedDB = async () => {
   try {
-    // Limpiar datos existentes
+    // ==========================================
+    // PASO 1: LIMPIAR DATOS EXISTENTES
+    // ==========================================
     await User.deleteMany({});
     await Product.deleteMany({});
     console.log('✅ Base de datos limpiada');
 
-    // Crear usuarios
+    // ==========================================
+    // PASO 2: CREAR USUARIOS INICIALES
+    // ==========================================
     const usuarios = [
       {
         nombre: 'SofiShop Admin',
         email: 'compras.sofishop@gmail.com',
-        password: await bcryptjs.hash('Sofia2022...', 10),
+        password: await bcryptjs.hash('Sofia2022...', 10), // Encriptar contraseña
         rol: 'admin',
         emailVerified: true
       },
@@ -44,6 +67,9 @@ const seedDB = async () => {
     const usuariosCreados = await User.insertMany(usuarios);
     console.log('✅ Usuarios creados:', usuariosCreados.length);
 
+    // ==========================================
+    // PASO 3: CREAR PRODUCTOS DE PERFUMES
+    // ==========================================
     // MUJER - 9 MARCAS x 10 PRODUCTOS = 90
     const productosM = [
       // CAROLINA HERRERA MUJER (10)

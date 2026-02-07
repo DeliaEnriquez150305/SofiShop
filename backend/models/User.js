@@ -1,5 +1,11 @@
+// ============================================
+// MODELO DE USUARIO
+// ============================================
+// Define la estructura de los usuarios (clientes y administradores)
+
 const mongoose = require('mongoose');
 
+// Schema del usuario con todos sus campos
 const UserSchema = new mongoose.Schema({
   nombre: {
     type: String,

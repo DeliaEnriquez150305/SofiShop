@@ -7,7 +7,7 @@ const { enviarCorreoRecuperacion, enviarCorreoVerificacion } = require('../servi
 const router = express.Router();
 
 // Lista de emails autorizados para crear cuentas admin
-const ADMIN_EMAILS_AUTHORIZED = ['deliaenriquez150305@gmail.com'];
+const ADMIN_EMAILS_AUTHORIZED = ['compras.sofishop@gmail.com'];
 
 router.post('/register', async (req, res) => {
   try {
