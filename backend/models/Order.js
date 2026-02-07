@@ -30,7 +30,7 @@ const OrderSchema = new mongoose.Schema({
     enum: ['pendiente', 'procesando', 'enviado', 'entregado', 'cancelado', 'pagado']
   },
   pago: {
-    metodo: String, // 'payphone', 'efectivo', etc
+    metodo: String, // 'efectivo', etc
     estado: {
       type: String,
       enum: ['pendiente', 'procesando', 'completado', 'fallido'],

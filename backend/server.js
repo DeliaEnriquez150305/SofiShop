@@ -14,7 +14,6 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth.routes');
 const productRoutes = require('./routes/product.routes');
 const orderRoutes = require('./routes/order.routes');
-const paymentRoutes = require('./routes/payment.routes');
 
 // Inicializar aplicación Express
 const app = express();
@@ -37,7 +36,6 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);       // Autenticación y registro de usuarios
 app.use('/api/products', productRoutes); // CRUD de productos
 app.use('/api/orders', orderRoutes);     // Gestión de pedidos
-app.use('/api/payments', paymentRoutes); // Integración con pasarela de pagos
 
 // ============================================
 // SERVIR ARCHIVOS ESTÁTICOS (FRONTEND)
