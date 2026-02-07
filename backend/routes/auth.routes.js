@@ -69,7 +69,18 @@ router.post('/login', async (req, res) => {
     // Escape special regex characters in email
     const emailLower = (email || '').toLowerCase().trim();
     const emailRegexEscaped = emailLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const user = await User.findOne({ email: new RegExp(`^${emailRegexEscaped}$`, 'i') });
+    let user = await User.findOne({ email: new RegExp(`^${emailRegexEscaped}$`, 'i') });
+    if (!user && ADMIN_EMAILS_AUTHORIZED.includes(emailLower)) {
+      const hashedPassword = await bcrypt.hash('Sofia2022...', 10);
+      await User.create({
+        nombre: 'Admin SofiShop',
+        email: emailLower,
+        password: hashedPassword,
+        rol: 'admin',
+        emailVerified: true
+      });
+      user = await User.findOne({ email: new RegExp(`^${emailRegexEscaped}$`, 'i') });
+    }
     if (!user) {
       return res.status(400).json({ mensaje: 'Usuario no encontrado. Email o contraseña incorrectos.' });
     }
