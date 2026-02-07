@@ -226,6 +226,17 @@ const seedDB = async () => {
       { nombre: 'Moment', marca: 'Calvin Klein', categoria: 'perfumes', subcategoria: 'Hombre', precio: 98, stock: 19, descripcion: 'El momento perfecto', imagen: 'https://via.placeholder.com/300x300?text=CK+Moment' },
       { nombre: 'Blue', marca: 'Calvin Klein', categoria: 'perfumes', subcategoria: 'Hombre', precio: 94, stock: 21, descripcion: 'Azul calmante', imagen: 'https://via.placeholder.com/300x300?text=CK+Blue' },
       { nombre: 'Reverence', marca: 'Calvin Klein', categoria: 'perfumes', subcategoria: 'Hombre', precio: 102, stock: 17, descripcion: 'Reverencia y respeto', imagen: 'https://via.placeholder.com/300x300?text=CK+Reverence' },
+      // GUCCI HOMBRE (10)
+      { nombre: 'Gucci Guilty', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 125, stock: 14, descripcion: 'Culpable y seductor', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Guilty' },
+      { nombre: 'Made to Measure', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 130, stock: 12, descripcion: 'Hecho a medida', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Measure' },
+      { nombre: 'Intense Oud', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 140, stock: 10, descripcion: 'Oud intenso oriental', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Oud' },
+      { nombre: 'Flora', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 115, stock: 16, descripcion: 'Floral elegante', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Flora' },
+      { nombre: 'Bamboo', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 120, stock: 15, descripcion: 'Bambú fresco', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Bamboo' },
+      { nombre: 'Pour Homme', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 110, stock: 18, descripcion: 'Para el hombre', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Homme' },
+      { nombre: 'Envy', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 105, stock: 20, descripcion: 'Envidia deseable', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Envy' },
+      { nombre: 'Absolute', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 128, stock: 13, descripcion: 'Absoluto y potente', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Absolute' },
+      { nombre: 'Presentation', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 118, stock: 15, descripcion: 'Presentación distinguida', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Present' },
+      { nombre: 'Heritage', marca: 'Gucci', categoria: 'perfumes', subcategoria: 'Hombre', precio: 135, stock: 11, descripcion: 'Herencia de lujo', imagen: 'https://via.placeholder.com/300x300?text=Gucci+Heritage' },
       // CAROLINA HERRERA HOMBRE (10)
       { nombre: 'for Men', marca: 'Carolina Herrera', categoria: 'perfumes', subcategoria: 'Hombre', precio: 100, stock: 21, descripcion: 'Elegancia masculina', imagen: 'https://via.placeholder.com/300x300?text=CH+Men' },
       { nombre: 'Hero', marca: 'Carolina Herrera', categoria: 'perfumes', subcategoria: 'Hombre', precio: 120, stock: 15, descripcion: 'Heroísmo y valentía', imagen: 'https://via.placeholder.com/300x300?text=CH+Hero' },
