@@ -319,6 +319,10 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Servir la carpeta de uploads para imágenes de productos
 app.use('/uploads', express.static(path.join(__dirname, '../frontend/uploads')));
 
+// Servir carpetas de perfumes (con espacios en el nombre)
+app.use('/perfumes%20mujer', express.static(path.join(__dirname, '../frontend/perfumes mujer')));
+app.use('/perfumes%20hombre', express.static(path.join(__dirname, '../frontend/perfumes hombre')));
+
 // ============================================
 // RUTA RAÍZ
 // ============================================
