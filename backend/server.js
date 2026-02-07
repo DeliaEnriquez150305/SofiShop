@@ -32,7 +32,10 @@ const initializeDatabase = async () => {
     const productCount = await Product.countDocuments();
     const userCount = await User.countDocuments();
     
-    if (productCount === 0 || userCount === 0) {
+    // Verificar si hay productos sin subcategoría (bug anterior)
+    const productossinSub = await Product.countDocuments({ subcategoria: { $exists: false } });
+    
+    if (productCount === 0 || userCount === 0 || productossinSub > 0) {
       console.log('📊 Base de datos vacía, inicializando...');
       
       // Limpiar
@@ -272,6 +275,7 @@ const initializeDatabase = async () => {
               nombre: perfume.nombre,
               marca: brand,
               genero: gender === 'mujer' ? 'Mujer' : 'Hombre',
+              subcategoria: gender, // 'mujer' o 'hombre'
               precio: perfume.precio,
               descripcion: `Perfume ${perfume.nombre} de ${brand}`,
               categoria: 'perfumes',
