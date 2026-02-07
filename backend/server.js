@@ -7,6 +7,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config(); // Cargar variables de entorno
 
 // Importar configuraciones y rutas
@@ -279,6 +280,7 @@ const initializeDatabase = async () => {
               precio: perfume.precio,
               descripcion: `Perfume ${perfume.nombre} de ${brand}`,
               categoria: 'perfumes',
+              stock: 10,
               imagen: `perfumes ${gender}/${brand}/${perfume.nombre}.jpg`
             });
             count++;
@@ -287,6 +289,77 @@ const initializeDatabase = async () => {
       }
       
       console.log(`✅ BD inicializada: ${count} productos, 2 usuarios`);
+      
+      // ==========================================
+      // MAPEAR IMÁGENES REALES
+      // ==========================================
+      console.log('\n🖼️ Mapeando imágenes reales...');
+      
+      const marcasMujer = {
+        'Carolina Herrera': 'Carolina Herrera',
+        'Katty Perry': 'Katty Perry',
+        'Ariana Grande': 'Ariana Grande',
+        'Britney Spears': 'Britney Spears',
+        'Calvin Klein': 'Calvin Klein',
+        'Hugo Boss': 'Hugo Boss',
+        'Paco Rabanne': 'Paco Rabanne',
+        'Paris Hilton': 'Paris Hilton',
+        'Afnan': 'Afnan'
+      };
+
+      const marcasHombre = {
+        'Carolina Herrera': 'CarolinaHerrera',
+        'Paco Rabanne': 'PacoRabanne',
+        'Calvin Klein': 'CalvinKlein',
+        'Hugo Boss': 'HugoBoss',
+        'Gucci': 'Gucci',
+        'Ralph Lauren': 'RalphLauren',
+        'Paris Hilton': 'ParisHilton',
+        'Bharara': 'Bharara',
+        'Lattafa': 'Lattafa'
+      };
+      
+      let imagenesMapeadas = 0;
+      
+      // Mapear mujer
+      for (const [marcaDB, carpeta] of Object.entries(marcasMujer)) {
+        const productos = await Product.find({ marca: marcaDB, subcategoria: 'mujer' });
+        const rutaCarpeta = path.join(__dirname, '../frontend/perfumes mujer', carpeta);
+        
+        if (fs.existsSync(rutaCarpeta)) {
+          const imagenes = fs.readdirSync(rutaCarpeta).filter(f => 
+            f.endsWith('.png') || f.endsWith('.jpg') || f.endsWith('.jpeg') || f.endsWith('.webp')
+          );
+          
+          for (let i = 0; i < productos.length; i++) {
+            const indiceImagen = i % imagenes.length;
+            const rutaImagen = `perfumes mujer/${carpeta}/${imagenes[indiceImagen]}`;
+            await Product.updateOne({ _id: productos[i]._id }, { imagen: rutaImagen });
+            imagenesMapeadas++;
+          }
+        }
+      }
+      
+      // Mapear hombre
+      for (const [marcaDB, carpeta] of Object.entries(marcasHombre)) {
+        const productos = await Product.find({ marca: marcaDB, subcategoria: 'hombre' });
+        const rutaCarpeta = path.join(__dirname, '../frontend/perfumes hombre', carpeta);
+        
+        if (fs.existsSync(rutaCarpeta)) {
+          const imagenes = fs.readdirSync(rutaCarpeta).filter(f => 
+            f.endsWith('.png') || f.endsWith('.jpg') || f.endsWith('.jpeg') || f.endsWith('.webp')
+          );
+          
+          for (let i = 0; i < productos.length; i++) {
+            const indiceImagen = i % imagenes.length;
+            const rutaImagen = `perfumes hombre/${carpeta}/${imagenes[indiceImagen]}`;
+            await Product.updateOne({ _id: productos[i]._id }, { imagen: rutaImagen });
+            imagenesMapeadas++;
+          }
+        }
+      }
+      
+      console.log(`✅ ${imagenesMapeadas} imágenes mapeadas correctamente`);
     } else {
       console.log(`✅ BD lista: ${productCount} productos, ${userCount} usuarios`);
     }
