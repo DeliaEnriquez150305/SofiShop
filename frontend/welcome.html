@@ -1300,7 +1300,7 @@
       slide.className = 'carousel-slide';
       const baseUrl = 'http://localhost:3000';
       const imagenUrl = producto.imagen
-        ? (producto.imagen.startsWith('http') ? producto.imagen : `${baseUrl}/uploads/${producto.imagen}`)
+        ? (producto.imagen.startsWith('http') ? producto.imagen : `${baseUrl}/${producto.imagen}`)
         : 'https://via.placeholder.com/300x300?text=' + encodeURIComponent(producto.nombre || 'Perfume');
       slide.innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">

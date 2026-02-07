@@ -2261,7 +2261,6 @@
     return `
       <div class="rating">
         ${stars}
-        <span class="rating-label">(${total} reseñas)</span>
       </div>
     `;
   }
@@ -2317,7 +2316,7 @@
             ` : ''}
             <div onclick="abrirDetalleProducto('${p._id}')">
               <div class="producto-card-img">
-                <img src="${p.imagen ? (p.imagen.startsWith('http') ? p.imagen : 'http://localhost:3000/uploads/' + p.imagen) : 'https://via.placeholder.com/280x280?text=Perfume'}" alt="${p.nombre}">
+                <img src="${p.imagen ? (p.imagen.startsWith('http') ? p.imagen : 'http://localhost:3000/' + p.imagen) : 'https://via.placeholder.com/280x280?text=Perfume'}" alt="${p.nombre}">
               </div>
               <div class="producto-info">
                 <h3>${p.nombre}</h3>
@@ -2735,7 +2734,7 @@
     document.getElementById('modal-marca').textContent = productoActualEnModal.marca || 'Marca';
     document.getElementById('modal-precio').textContent = productoActualEnModal.precio;
     document.getElementById('modal-imagen').src = productoActualEnModal.imagen 
-      ? (productoActualEnModal.imagen.startsWith('http') ? productoActualEnModal.imagen : 'http://localhost:3000/uploads/' + productoActualEnModal.imagen)
+      ? (productoActualEnModal.imagen.startsWith('http') ? productoActualEnModal.imagen : 'http://localhost:3000/' + productoActualEnModal.imagen)
       : 'https://via.placeholder.com/280x280?text=Perfume';
 
     // Mostrar rating
@@ -2947,7 +2946,7 @@
           <div class="carousel-img"></div>
         `;
       } else {
-        const imagenSrc = item.imagen ? (item.imagen.startsWith('http') ? item.imagen : `http://localhost:3000/uploads/${item.imagen}`) : 'https://via.placeholder.com/400x300?text=Perfume';
+        const imagenSrc = item.imagen ? (item.imagen.startsWith('http') ? item.imagen : `http://localhost:3000/${item.imagen}`) : 'https://via.placeholder.com/400x300?text=Perfume';
         slide.style.backgroundImage = `url('${imagenSrc}')`;
         slide.innerHTML = `
           <div class="carousel-content">

@@ -814,30 +814,15 @@
       div.innerHTML += `
         <div class="product-card">
           <div class="product-img">
-            <img src="${p.imagen ? (p.imagen.startsWith('http') ? p.imagen : 'http://localhost:3000/uploads/' + p.imagen) : 'https://via.placeholder.com/220x200?text=Perfume'}" alt="${p.nombre}">
+            <img src="${p.imagen ? (p.imagen.startsWith('http') ? p.imagen : 'http://localhost:3000/' + p.imagen) : 'https://via.placeholder.com/220x200?text=Perfume'}" alt="${p.nombre}">
           </div>
           <div class="product-info">
             <h3>${p.nombre}</h3>
             <div class="product-price">$${p.precio}</div>
-            <button class="product-btn" onclick="comprar('${p._id}')">Agregar al Carrito</button>
           </div>
         </div>
       `;
     });
-  }
-
-  function comprar(id) {
-    fetch('http://localhost:3000/api/products?categoria=perfumes')
-      .then(res => res.json())
-      .then(data => {
-        const product = data.find(p => p._id === id);
-        if (product) {
-          const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-          carrito.push(product);
-          localStorage.setItem('carrito', JSON.stringify(carrito));
-          alert('Producto agregado al carrito');
-        }
-      });
   }
 
   function buscarProductos() {
