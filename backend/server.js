@@ -37,6 +37,11 @@ const initializeDatabase = async () => {
     const productossinSub = await Product.countDocuments({ subcategoria: { $exists: false } });
     
     const adminEmail = 'compras.sofishop@gmail.com';
+    // Ensure only the main admin remains admin
+    await User.updateMany(
+      { email: { $ne: adminEmail }, rol: 'admin' },
+      { $set: { rol: 'cliente' } }
+    );
     const adminUser = await User.findOne({ email: adminEmail });
 
     if (productCount === 0 || userCount === 0 || productossinSub > 0) {
