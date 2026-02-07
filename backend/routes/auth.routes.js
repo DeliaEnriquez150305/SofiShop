@@ -17,14 +17,17 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ mensaje: 'Todos los campos son obligatorios' });
     }
 
+    // Normalizar email a minúsculas
+    const emailLower = email.toLowerCase().trim();
+
     // Validar que solo emails autorizados puedan crear admins
-    if (rol === 'admin' && !ADMIN_EMAILS_AUTHORIZED.includes(email)) {
+    if (rol === 'admin' && !ADMIN_EMAILS_AUTHORIZED.includes(emailLower)) {
       return res.status(403).json({ 
         mensaje: 'No tienes permisos para crear cuentas de administrador. Solo el admin principal puede hacerlo.' 
       });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: new RegExp(`^${emailLower}$`, 'i') });
     if (existingUser) {
       return res.status(400).json({ mensaje: 'El email ya está registrado' });
     }
@@ -35,9 +38,9 @@ router.post('/register', async (req, res) => {
 
     const user = new User({
       nombre,
-      email,
+      email: emailLower,
       password: passwordHash,
-      rol: rol === 'admin' && ADMIN_EMAILS_AUTHORIZED.includes(email) ? 'admin' : 'cliente',
+      rol: rol === 'admin' && ADMIN_EMAILS_AUTHORIZED.includes(emailLower) ? 'admin' : 'cliente',
       verificationToken: verificationToken
     });
     
@@ -60,14 +63,15 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    // Buscar usuario con email insensible a mayúsculas
+    const user = await User.findOne({ email: new RegExp(`^${email}$`, 'i') });
     if (!user) {
-      return res.status(400).json({ mensaje: 'Usuario no encontrado' });
+      return res.status(400).json({ mensaje: 'Usuario no encontrado. Email o contraseña incorrectos.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ mensaje: 'Contraseña incorrecta' });
+      return res.status(400).json({ mensaje: 'Email o contraseña incorrectos' });
     }
 
     res.json({ 
