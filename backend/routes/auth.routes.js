@@ -27,7 +27,9 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email: new RegExp(`^${emailLower}$`, 'i') });
+    // Escape special regex characters in email
+    const emailRegexEscaped = emailLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const existingUser = await User.findOne({ email: new RegExp(`^${emailRegexEscaped}$`, 'i') });
     if (existingUser) {
       return res.status(400).json({ mensaje: 'El email ya está registrado' });
     }
@@ -64,7 +66,9 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     // Buscar usuario con email insensible a mayúsculas
-    const user = await User.findOne({ email: new RegExp(`^${email}$`, 'i') });
+    // Escape special regex characters in email
+    const emailRegexEscaped = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const user = await User.findOne({ email: new RegExp(`^${emailRegexEscaped}$`, 'i') });
     if (!user) {
       return res.status(400).json({ mensaje: 'Usuario no encontrado. Email o contraseña incorrectos.' });
     }
