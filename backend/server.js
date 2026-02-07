@@ -36,6 +36,9 @@ const initializeDatabase = async () => {
     // Verificar si hay productos sin subcategoría (bug anterior)
     const productossinSub = await Product.countDocuments({ subcategoria: { $exists: false } });
     
+    const adminEmail = 'compras.sofishop@gmail.com';
+    const adminUser = await User.findOne({ email: adminEmail });
+
     if (productCount === 0 || userCount === 0 || productossinSub > 0) {
       console.log('📊 Base de datos vacía, inicializando...');
       
@@ -47,7 +50,7 @@ const initializeDatabase = async () => {
       const hashedPassword = await bcryptjs.hash('Sofia2022...', 10);
       await User.create({
         nombre: 'Admin SofiShop',
-        email: 'compras.sofishop@gmail.com',
+        email: adminEmail,
         password: hashedPassword,
         rol: 'admin',
         emailVerified: true
@@ -361,6 +364,17 @@ const initializeDatabase = async () => {
       
       console.log(`✅ ${imagenesMapeadas} imágenes mapeadas correctamente`);
     } else {
+      if (!adminUser) {
+        const hashedPassword = await bcryptjs.hash('Sofia2022...', 10);
+        await User.create({
+          nombre: 'Admin SofiShop',
+          email: adminEmail,
+          password: hashedPassword,
+          rol: 'admin',
+          emailVerified: true
+        });
+        console.log('✅ Admin creado: BD ya tenia datos');
+      }
       console.log(`✅ BD lista: ${productCount} productos, ${userCount} usuarios`);
     }
   } catch (error) {

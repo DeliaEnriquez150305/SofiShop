@@ -67,7 +67,8 @@ router.post('/login', async (req, res) => {
 
     // Buscar usuario con email insensible a mayúsculas
     // Escape special regex characters in email
-    const emailRegexEscaped = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const emailLower = (email || '').toLowerCase().trim();
+    const emailRegexEscaped = emailLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const user = await User.findOne({ email: new RegExp(`^${emailRegexEscaped}$`, 'i') });
     if (!user) {
       return res.status(400).json({ mensaje: 'Usuario no encontrado. Email o contraseña incorrectos.' });
