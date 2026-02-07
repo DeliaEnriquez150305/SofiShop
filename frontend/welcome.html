@@ -1299,9 +1299,8 @@
     productos.forEach(producto => {
       const slide = document.createElement('div');
       slide.className = 'carousel-slide';
-      const baseUrl = API_URL;
-      const imagenUrl = producto.imagen
-        ? (producto.imagen.startsWith('http') ? producto.imagen : `${baseUrl}/${producto.imagen}`)
+      const imagenUrl = producto.imagen 
+        ? (producto.imagen.startsWith('http') ? producto.imagen : API_URL + '/' + encodeURI(producto.imagen))
         : 'https://via.placeholder.com/300x300?text=' + encodeURIComponent(producto.nombre || 'Perfume');
       slide.innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">

@@ -2317,7 +2317,7 @@
             ` : ''}
             <div onclick="abrirDetalleProducto('${p._id}')">
               <div class="producto-card-img">
-                <img src="${getImageUrl(p.imagen)}" alt="${p.nombre}">
+                <img src="${p.imagen ? (p.imagen.startsWith('http') ? p.imagen : API_URL + '/' + encodeURI(p.imagen)) : 'https://via.placeholder.com/280x280?text=Perfume'}" alt="${p.nombre}">
               </div>
               <div class="producto-info">
                 <h3>${p.nombre}</h3>
@@ -2734,7 +2734,9 @@
     document.getElementById('modal-titulo').textContent = productoActualEnModal.nombre;
     document.getElementById('modal-marca').textContent = productoActualEnModal.marca || 'Marca';
     document.getElementById('modal-precio').textContent = productoActualEnModal.precio;
-    document.getElementById('modal-imagen').src = getImageUrl(productoActualEnModal.imagen);
+    document.getElementById('modal-imagen').src = productoActualEnModal.imagen 
+      ? (productoActualEnModal.imagen.startsWith('http') ? productoActualEnModal.imagen : API_URL + '/' + encodeURI(productoActualEnModal.imagen))
+      : 'https://via.placeholder.com/280x280?text=Perfume';
 
     // Mostrar rating
     const isCliente = usuario && usuario.rol === 'cliente';
