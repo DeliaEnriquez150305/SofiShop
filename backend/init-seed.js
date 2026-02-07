@@ -1,0 +1,291 @@
+// ============================================
+// SCRIPT DE INICIALIZACIÓN SIN EMAILS
+// ============================================
+// Para usar en Render: llena la BD sin enviar emails
+// Uso: node init-seed.js
+
+const mongoose = require('mongoose');
+const bcryptjs = require('bcryptjs');
+require('dotenv').config();
+
+const User = require('./models/User');
+const Product = require('./models/Product');
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('✅ MongoDB conectado');
+  } catch (error) {
+    console.error('❌ Error al conectar MongoDB', error);
+    process.exit(1);
+  }
+};
+
+const seed = async () => {
+  try {
+    // Limpiar BD
+    await User.deleteMany({});
+    await Product.deleteMany({});
+    console.log('✅ Base de datos limpiada');
+
+    // Crear usuarios
+    const hashedPassword = await bcryptjs.hash('Sofia2022...', 10);
+    const adminUser = new User({
+      nombre: 'Admin SofiShop',
+      email: 'compras.sofishop@gmail.com',
+      password: hashedPassword,
+      rol: 'admin',
+      emailVerified: true
+    });
+    await adminUser.save();
+
+    const clientUser = new User({
+      nombre: 'Usuario Demo',
+      email: 'deliaenriquez150305@gmail.com',
+      password: await bcryptjs.hash('usuario123', 10),
+      rol: 'cliente',
+      emailVerified: true
+    });
+    await clientUser.save();
+    console.log('✅ Usuarios creados: 2');
+
+    // Crear 180 productos
+    const perfumesData = {
+      mujer: {
+        'Carolina Herrera': [
+          { nombre: 'Good Girl', precio: 85 },
+          { nombre: 'Very Good Girl', precio: 90 },
+          { nombre: 'Very Good Girl Légère', precio: 88 },
+          { nombre: 'Good Girl Supreme', precio: 95 },
+          { nombre: 'Good Girl Golden Femininity', precio: 92 },
+          { nombre: 'Good Girl Eau de Parfum', precio: 87 },
+          { nombre: 'Good Girl Collector Edition', precio: 98 },
+          { nombre: 'Very Good Girl Oui', precio: 89 },
+          { nombre: 'CH Privée', precio: 110 },
+          { nombre: 'CH212 VIP Rosé', precio: 105 }
+        ],
+        'Ariana Grande': [
+          { nombre: 'Ari by Ariana Grande', precio: 50 },
+          { nombre: 'Moonlight', precio: 55 },
+          { nombre: 'Cloud', precio: 60 },
+          { nombre: 'God is a Woman', precio: 58 },
+          { nombre: 'Thank U, Next', precio: 62 },
+          { nombre: 'Girlboss', precio: 65 },
+          { nombre: 'Stronger Together', precio: 63 },
+          { nombre: 'REM', precio: 67 },
+          { nombre: 'Eternal Petals', precio: 69 },
+          { nombre: 'Summer Peach', precio: 61 }
+        ],
+        'Britney Spears': [
+          { nombre: 'Circus', precio: 45 },
+          { nombre: 'Curious', precio: 48 },
+          { nombre: 'Midnight Fantasy', precio: 52 },
+          { nombre: 'Radiance', precio: 50 },
+          { nombre: 'Believe', precio: 46 },
+          { nombre: 'Fantasy', precio: 49 },
+          { nombre: 'Toxic', precio: 54 },
+          { nombre: 'Prerogative', precio: 51 },
+          { nombre: 'In Control', precio: 53 },
+          { nombre: 'Hidden Fantasy', precio: 55 },
+          { nombre: 'Ooh La La', precio: 47 },
+          { nombre: 'Intimate', precio: 44 },
+          { nombre: 'Seduction', precio: 56 }
+        ],
+        'Calvin Klein': [
+          { nombre: 'Obsession', precio: 75 },
+          { nombre: 'Eternity', precio: 78 },
+          { nombre: 'Be', precio: 68 },
+          { nombre: 'Reveal', precio: 72 },
+          { nombre: 'Truth', precio: 70 },
+          { nombre: 'One', precio: 69 },
+          { nombre: 'Escape', precio: 71 },
+          { nombre: 'Deep Euphoria', precio: 76 },
+          { nombre: 'Euphoria', precio: 74 },
+          { nombre: 'Woman', precio: 73 },
+          { nombre: 'Downtown', precio: 77 },
+          { nombre: 'Aqua', precio: 65 }
+        ],
+        'Hugo Boss': [
+          { nombre: 'Boss Orange Woman', precio: 68 },
+          { nombre: 'Boss Bottled Scent', precio: 72 },
+          { nombre: 'Boss Ma Vie', precio: 75 },
+          { nombre: 'Boss Nuit', precio: 78 },
+          { nombre: 'Boss Essence', precio: 70 },
+          { nombre: 'Boss Intense', precio: 76 },
+          { nombre: 'Boss Sparkling', precio: 69 },
+          { nombre: 'Boss Jour', precio: 73 },
+          { nombre: 'Boss Just Different', precio: 74 },
+          { nombre: 'Boss Magnetix', precio: 77 },
+          { nombre: 'Boss Alive', precio: 71 },
+          { nombre: 'Boss Rose', precio: 79 }
+        ],
+        'Paco Rabanne': [
+          { nombre: 'Olympea', precio: 85 },
+          { nombre: 'Phantom', precio: 88 },
+          { nombre: '1 Million', precio: 90 },
+          { nombre: 'Invictus', precio: 89 },
+          { nombre: 'Fame', precio: 92 },
+          { nombre: 'Ultraviolet', precio: 91 },
+          { nombre: 'Invictus Legend', precio: 86 },
+          { nombre: 'Pure XS', precio: 87 },
+          { nombre: 'Givenchy', precio: 94 },
+          { nombre: 'Eros', precio: 93 },
+          { nombre: 'Phantom Secret', precio: 95 },
+          { nombre: 'Invictus Victory', precio: 84 }
+        ],
+        'Paris Hilton': [
+          { nombre: 'Just Me', precio: 40 },
+          { nombre: 'Heiress', precio: 45 },
+          { nombre: 'Come Hither', precio: 42 },
+          { nombre: 'Dazzle', precio: 41 },
+          { nombre: 'Luxe', precio: 43 },
+          { nombre: 'Electrify Me', precio: 39 },
+          { nombre: 'Fairy Dust', precio: 38 },
+          { nombre: 'Insatiable', precio: 44 }
+        ],
+        'Katty Perry': [
+          { nombre: 'Meowing Nudes', precio: 35 },
+          { nombre: 'Purr', precio: 38 },
+          { nombre: 'Indi Visible', precio: 36 },
+          { nombre: 'Killer Queen', precio: 40 },
+          { nombre: 'Mad Potion', precio: 37 },
+          { nombre: 'Cosmic', precio: 39 },
+          { nombre: 'Royal Revolution', precio: 41 },
+          { nombre: 'Citrine Mystique', precio: 42 }
+        ],
+        'Afnan': [
+          { nombre: 'Naseej Al Ward', precio: 65 },
+          { nombre: 'Sehr Al Madina', precio: 68 },
+          { nombre: 'Turathi', precio: 62 },
+          { nombre: 'Naseej', precio: 66 },
+          { nombre: 'Supremacy Pour Femme', precio: 70 },
+          { nombre: 'Manara Gold', precio: 72 },
+          { nombre: 'Supremacy Pour Homme', precio: 75 },
+          { nombre: 'Naseej Al Reef', precio: 67 },
+          { nombre: 'Bilqis', precio: 71 },
+          { nombre: 'Turathi Oud', precio: 73 }
+        ]
+      },
+      hombre: {
+        'Carolina Herrera': [
+          { nombre: 'Bad Boy', precio: 95 },
+          { nombre: 'CH Men', precio: 98 },
+          { nombre: 'Gentleman', precio: 100 },
+          { nombre: 'VIP', precio: 102 },
+          { nombre: 'Play', precio: 89 },
+          { nombre: 'Aqua', precio: 85 },
+          { nombre: 'Concentré', precio: 105 },
+          { nombre: 'Privée Cologne', precio: 110 }
+        ],
+        'Paco Rabanne': [
+          { nombre: '1 Million', precio: 95 },
+          { nombre: 'Invictus', precio: 98 },
+          { nombre: 'Phantom', precio: 102 },
+          { nombre: 'Hero', precio: 85 },
+          { nombre: 'Fame', precio: 100 },
+          { nombre: 'Legend', precio: 88 },
+          { nombre: 'Infrared', precio: 97 },
+          { nombre: 'Cologne', precio: 80 }
+        ],
+        'Calvin Klein': [
+          { nombre: 'Obsession', precio: 85 },
+          { nombre: 'Eternity', precio: 88 },
+          { nombre: 'Escape', precio: 80 },
+          { nombre: 'Code', precio: 82 },
+          { nombre: 'Truth', precio: 78 },
+          { nombre: 'One', precio: 77 },
+          { nombre: 'Be', precio: 76 },
+          { nombre: 'Downtown', precio: 84 },
+          { nombre: 'Aqua', precio: 74 }
+        ],
+        'Hugo Boss': [
+          { nombre: 'Boss Bottled', precio: 85 },
+          { nombre: 'Boss Intense', precio: 88 },
+          { nombre: 'Boss Orange', precio: 81 },
+          { nombre: 'Boss Soul', precio: 89 },
+          { nombre: 'Boss Nuit', precio: 91 },
+          { nombre: 'Boss Jour', precio: 79 },
+          { nombre: 'Boss Magnetix', precio: 87 },
+          { nombre: 'Boss Alive', precio: 83 },
+          { nombre: 'Boss Rebellion', precio: 90 }
+        ],
+        'Gucci': [
+          { nombre: 'Gucci Guilty', precio: 105 },
+          { nombre: 'Gucci Pour Homme', precio: 98 },
+          { nombre: 'Made to Measure', precio: 110 },
+          { nombre: 'Oud', precio: 125 },
+          { nombre: 'Guilty Black', precio: 108 },
+          { nombre: 'By Gucci', precio: 95 },
+          { nombre: 'Memoire', precio: 115 },
+          { nombre: 'Bamboo', precio: 100 }
+        ],
+        'Ralph Lauren': [
+          { nombre: 'Polo', precio: 80 },
+          { nombre: 'Polo Black', precio: 85 },
+          { nombre: 'Romance', precio: 88 },
+          { nombre: 'Safari', precio: 92 },
+          { nombre: 'Purple Label', precio: 110 },
+          { nombre: 'Rl Blue Label', precio: 78 },
+          { nombre: 'Chaps', precio: 70 },
+          { nombre: 'Eau de Toilette', precio: 75 },
+          { nombre: 'Legend', precio: 82 },
+          { nombre: 'Rhapsody', precio: 95 }
+        ],
+        'Bharara': [
+          { nombre: 'Black Afghano', precio: 95 },
+          { nombre: 'King Oud', precio: 98 },
+          { nombre: 'Oud Wood', precio: 100 },
+          { nombre: 'White Oud', precio: 105 },
+          { nombre: 'Royal Oud', precio: 110 },
+          { nombre: 'Exclusif', precio: 115 },
+          { nombre: 'Heritage', precio: 92 },
+          { nombre: 'Vintage', precio: 88 }
+        ],
+        'Lattafa': [
+          { nombre: 'Opulence Gold', precio: 75 },
+          { nombre: 'Kudus Oud', precio: 78 },
+          { nombre: 'Al Amir', precio: 72 },
+          { nombre: 'Fakhar', precio: 70 },
+          { nombre: 'Qism Al Dhahab', precio: 76 },
+          { nombre: 'Asad', precio: 74 },
+          { nombre: 'Pride', precio: 73 },
+          { nombre: 'Majmua', precio: 71 }
+        ]
+      }
+    };
+
+    let productCount = 0;
+
+    // Crear productos
+    for (const [gender, brands] of Object.entries(perfumesData)) {
+      for (const [brand, perfumes] of Object.entries(brands)) {
+        for (const perfume of perfumes) {
+          const product = new Product({
+            nombre: perfume.nombre,
+            marca: brand,
+            genero: gender === 'mujer' ? 'Mujer' : 'Hombre',
+            precio: perfume.precio,
+            descripcion: `Perfume ${perfume.nombre} de ${brand}`,
+            categoria: 'perfumes',
+            imagen: `perfumes ${gender}/${brand}/${perfume.nombre}.jpg`
+          });
+          await product.save();
+          productCount++;
+        }
+      }
+    }
+
+    console.log(`✅ Productos creados: ${productCount}`);
+    console.log('\n✨ Base de datos inicializada correctamente');
+    console.log('\n📝 Admin: compras.sofishop@gmail.com / Sofia2022...');
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Error:', error);
+    process.exit(1);
+  }
+};
+
+(async () => {
+  await connectDB();
+  await seed();
+})();
