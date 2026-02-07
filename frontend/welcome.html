@@ -1048,6 +1048,7 @@
     }
 
   </style>
+  <script src="config.js"></script>
 </head>
 <body>
 
@@ -1260,7 +1261,7 @@
   // Cargar productos destacados
   async function cargarProductosDestacados() {
     try {
-      const res = await fetch('http://localhost:3000/api/products?categoria=perfumes');
+      const res = await fetch(API_URL + '/api/products?categoria=perfumes');
       const productos = await res.json();
       verificarNuevosProductos(productos);
       
@@ -1298,7 +1299,7 @@
     productos.forEach(producto => {
       const slide = document.createElement('div');
       slide.className = 'carousel-slide';
-      const baseUrl = 'http://localhost:3000';
+      const baseUrl = API_URL;
       const imagenUrl = producto.imagen
         ? (producto.imagen.startsWith('http') ? producto.imagen : `${baseUrl}/${producto.imagen}`)
         : 'https://via.placeholder.com/300x300?text=' + encodeURIComponent(producto.nombre || 'Perfume');
@@ -1426,7 +1427,7 @@
 
 
   function comprar(id) {
-    fetch('http://localhost:3000/api/products?categoria=perfumes')
+    fetch(API_URL + '/api/products?categoria=perfumes')
       .then(res => res.json())
       .then(data => {
         const product = data.find(p => p._id === id);
@@ -1597,7 +1598,7 @@
     const badge = document.getElementById('pedidos-count-welcome');
     if (!badge) return;
     try {
-      const response = await fetch('http://localhost:3000/api/orders');
+      const response = await fetch(API_URL + '/api/orders');
       if (!response.ok) throw new Error('Respuesta inválida del servidor');
       const pedidos = await response.json();
       const pendientes = pedidos.filter(p => (p.estado || '').toLowerCase() === 'pendiente').length;
