@@ -24,7 +24,7 @@ const Product = require('./models/Product');
  */
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/SofiShop');
+    await mongoose.connect('mongodb+srv://deliaenriquez_db_user:admin123@sofi.5a5opzn.mongodb.net/');
     console.log('✅ MongoDB conectado');
   } catch (error) {
     console.error('❌ Error al conectar MongoDB', error);

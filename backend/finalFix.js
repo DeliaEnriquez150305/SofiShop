@@ -5,7 +5,7 @@ const Product = require('./models/Product');
 
 (async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/SofiShop');
+    await mongoose.connect('mongodb+srv://deliaenriquez_db_user:admin123@sofi.5a5opzn.mongodb.net/');
     
     // Actualizar Ralph Lauren
     const products = await Product.find({ marca: 'Ralph Lauren' });
