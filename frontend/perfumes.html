@@ -2898,33 +2898,41 @@
   let currentSlide = 0;
   let carouselItems = [];
 
-  async function inicializarCarrusel() {
-    try {
-      const res = await fetch(API_URL + '/api/products?categoria=perfumes');
-      const productos = await res.json();
-      
-      // Filtrar productos por el género seleccionado (case-insensitive)
-      const productosFiltrados = productos.filter(p => 
-        (p.subcategoria || '').toLowerCase() === generoSeleccionado.toLowerCase()
-      );
+async function inicializarCarrusel() {
+  try {
+    const res = await fetch(API_URL + '/api/products?categoria=perfumes');
+    const productos = await res.json();
 
-      carouselItems = productosFiltrados.slice(0, 5); // 5 productos del género seleccionado
-      
-      if (carouselItems.length === 0) {
-        document.querySelector('.carousel-section').style.display = 'none';
-        return;
-      }
-      
-      // Mostrar carrusel si hay productos
-      document.querySelector('.carousel-section').style.display = 'block';
-      
-      renderCarouselSlides();
-      renderCarouselDots();
-      startAutoPlay();
-    } catch (error) {
-      console.error('Error cargando carrusel:', error);
+    const productosFiltrados = productos.filter(p =>
+      (p.subcategoria || '').toLowerCase() === generoSeleccionado.toLowerCase()
+    );
+
+    carouselItems = productosFiltrados.slice(0, 5);
+
+    const carouselSection = document.querySelector('.carousel-section');
+    const track = document.querySelector('.carousel-track');
+
+    // 🛑 PROTECCIÓN CRÍTICA
+    if (!carouselSection || !track) {
+      console.warn('⚠️ Carrusel no existe en esta página');
+      return;
     }
+
+    if (carouselItems.length === 0) {
+      carouselSection.style.display = 'none';
+      return;
+    }
+
+    carouselSection.style.display = 'block';
+
+    renderCarouselSlides();
+    renderCarouselDots();
+    startAutoPlay();
+
+  } catch (error) {
+    console.error('Error cargando carrusel:', error);
   }
+}
 
   function renderCarouselSlides() {
     const track = document.getElementById('carouselTrack');

@@ -1290,20 +1290,41 @@
   let currentSlideHombre = 0;
   let currentSlideMujer = 0;
 
-  function inicializarCarrusel(productos, genero) {
-    const isMujer = genero === 'Mujer';
-    const trackId = isMujer ? 'carouselTrackMujer' : 'carouselTrackHombre';
-    const dotsId = isMujer ? 'carouselDotsMujer' : 'carouselDotsHombre';
-    const track = document.getElementById(trackId);
-    const dotsContainer = document.getElementById(dotsId);
-    
-    track.innerHTML = '';
-    dotsContainer.innerHTML = '';
-    
-    if (productos.length === 0) {
-      track.innerHTML = '<div class="carousel-slide"><p style="color: #999;">No hay productos disponibles</p></div>';
+  async function inicializarCarrusel() {
+  try {
+    const res = await fetch(API_URL + '/api/products?categoria=perfumes');
+    const productos = await res.json();
+
+    const productosFiltrados = productos.filter(p =>
+      (p.subcategoria || '').toLowerCase() === generoSeleccionado.toLowerCase()
+    );
+
+    carouselItems = productosFiltrados.slice(0, 5);
+
+    const carouselSection = document.querySelector('.carousel-section');
+    const track = document.querySelector('.carousel-track');
+
+    // 🛑 PROTECCIÓN CRÍTICA
+    if (!carouselSection || !track) {
+      console.warn('⚠️ Carrusel no existe en esta página');
       return;
     }
+
+    if (carouselItems.length === 0) {
+      carouselSection.style.display = 'none';
+      return;
+    }
+
+    carouselSection.style.display = 'block';
+
+    renderCarouselSlides();
+    renderCarouselDots();
+    startAutoPlay();
+
+  } catch (error) {
+    console.error('Error cargando carrusel:', error);
+  }
+}
     
     // Crear slides
     productos.forEach(producto => {
