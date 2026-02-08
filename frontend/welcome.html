@@ -1244,19 +1244,29 @@
 
   // Cambiar slide del hero
   function cambiarHeroSlide(index) {
-    // Remover clase active de todos
-    document.querySelectorAll('.hero-slide').forEach(slide => {
-      slide.classList.remove('active');
-    });
-    document.querySelectorAll('.hero-dot').forEach(dot => {
-      dot.classList.remove('active');
-    });
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-dot');
 
-    // Agregar clase active al nuevo slide
-    currentHeroSlide = index;
-    document.getElementById(`heroSlide${currentHeroSlide}`).classList.add('active');
-    document.querySelectorAll('.hero-dot')[currentHeroSlide].classList.add('active');
+  // 🛑 Protección: si no hay slides, no hacer nada
+  if (slides.length === 0) return;
+
+  // Ajustar índice si se sale del rango
+  currentHeroSlide = index % slides.length;
+
+  // Limpiar clases
+  slides.forEach(slide => slide.classList.remove('active'));
+  dots.forEach(dot => dot.classList.remove('active'));
+
+  // Activar slide si existe
+  if (slides[currentHeroSlide]) {
+    slides[currentHeroSlide].classList.add('active');
   }
+
+  // Activar dot si existe
+  if (dots[currentHeroSlide]) {
+    dots[currentHeroSlide].classList.add('active');
+  }
+}
 
   // Cargar productos destacados
   async function cargarProductosDestacados() {
