@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
     query.categoria = categoria;
   }
   const products = await Product.find(query);
-  const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+  const baseUrl = process.env.BACKEND_URL || 'https://sofishop-9.onrender.com';
   const normalizeImage = (img) => {
     if (!img) return img;
     if (img.startsWith('http://localhost:3000')) return img.replace('http://localhost:3000', baseUrl);
