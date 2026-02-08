@@ -27,7 +27,20 @@ router.get('/', async (req, res) => {
     query.categoria = categoria;
   }
   const products = await Product.find(query);
-  res.json(products);
+  const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+  const normalizeImage = (img) => {
+    if (!img) return img;
+    if (img.startsWith('http://localhost:3000')) return img.replace('http://localhost:3000', baseUrl);
+    if (img.startsWith('https://localhost:3000')) return img.replace('https://localhost:3000', baseUrl);
+    if (img.startsWith('http')) return img;
+    if (!img.includes('/')) return `${baseUrl}/uploads/${img}`;
+    return `${baseUrl}/${encodeURI(img)}`;
+  };
+  const normalized = products.map(p => ({
+    ...p.toObject(),
+    imagen: normalizeImage(p.imagen)
+  }));
+  res.json(normalized);
 });
 
 router.post('/', upload.single('imagen'), async (req, res) => {
