@@ -376,7 +376,7 @@
       formData.set('marca', marca);
 
       try {
-        const res = await fetch('http://localhost:3000/api/products', {
+        const res = await fetch('mongodb+srv://deliaenriquez_db_user:admin123@sofi.5a5opzn.mongodb.net/', {
           method: 'POST',
           body: formData
         });
