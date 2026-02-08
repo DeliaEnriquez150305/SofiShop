@@ -332,7 +332,7 @@ const initializeDatabase = async () => {
       // Mapear mujer
       for (const [marcaDB, carpeta] of Object.entries(marcasMujer)) {
         const productos = await Product.find({ marca: marcaDB, subcategoria: 'mujer' });
-        const rutaCarpeta = path.join(__dirname, '../frontend/perfumes mujer', carpeta);
+        const rutaCarpeta = path.join(__dirname, '../frontend/perfumesmujer', carpeta);
         
         if (fs.existsSync(rutaCarpeta)) {
           const imagenes = fs.readdirSync(rutaCarpeta).filter(f => 
@@ -341,7 +341,7 @@ const initializeDatabase = async () => {
           
           for (let i = 0; i < productos.length; i++) {
             const indiceImagen = i % imagenes.length;
-            const rutaImagen = `perfumes mujer/${carpeta}/${imagenes[indiceImagen]}`;
+            const rutaImagen = `perfumesmujer/${carpeta}/${imagenes[indiceImagen]}`;
             await Product.updateOne({ _id: productos[i]._id }, { imagen: rutaImagen });
             imagenesMapeadas++;
           }
@@ -351,7 +351,7 @@ const initializeDatabase = async () => {
       // Mapear hombre
       for (const [marcaDB, carpeta] of Object.entries(marcasHombre)) {
         const productos = await Product.find({ marca: marcaDB, subcategoria: 'hombre' });
-        const rutaCarpeta = path.join(__dirname, '../frontend/perfumes hombre', carpeta);
+        const rutaCarpeta = path.join(__dirname, '../frontend/perfumeshombre', carpeta);
         
         if (fs.existsSync(rutaCarpeta)) {
           const imagenes = fs.readdirSync(rutaCarpeta).filter(f => 
@@ -360,7 +360,7 @@ const initializeDatabase = async () => {
           
           for (let i = 0; i < productos.length; i++) {
             const indiceImagen = i % imagenes.length;
-            const rutaImagen = `perfumes hombre/${carpeta}/${imagenes[indiceImagen]}`;
+            const rutaImagen = `perfumeshombre/${carpeta}/${imagenes[indiceImagen]}`;
             await Product.updateOne({ _id: productos[i]._id }, { imagen: rutaImagen });
             imagenesMapeadas++;
           }

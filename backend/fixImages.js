@@ -27,14 +27,14 @@ const fixMissingImages = async () => {
       const products = await Product.find({ marca: dbBrand });
       console.log(`  📌 ${dbBrand}: ${products.length} productos`);
       
-      const brandPath = path.join(__dirname, '../frontend/perfumes hombre', folderBrand);
+      const brandPath = path.join(__dirname, '../frontend/perfumeshombre', folderBrand);
       if (fs.existsSync(brandPath)) {
         const images = fs.readdirSync(brandPath).filter(f => f.endsWith('.png'));
         console.log(`     ✅ Encontradas ${images.length} imágenes`);
         
         for (let i = 0; i < products.length; i++) {
           const imageIndex = i % images.length;
-          const imagePath = `perfumes hombre/${folderBrand}/${images[imageIndex]}`;
+          const imagePath = `perfumeshombre/${folderBrand}/${images[imageIndex]}`;
           
           await Product.updateOne(
             { _id: products[i]._id },

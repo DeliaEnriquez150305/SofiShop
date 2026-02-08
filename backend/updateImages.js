@@ -15,8 +15,8 @@ const connectDB = async () => {
 
 const getImageFiles = () => {
   const imagePath = path.join(__dirname, '../frontend');
-  const mujerPath = path.join(imagePath, 'perfumes mujer');
-  const hombrePath = path.join(imagePath, 'perfumes hombre');
+  const mujerPath = path.join(imagePath, 'perfumesmujer');
+  const hombrePath = path.join(imagePath, 'perfumeshombre');
 
   let imageMap = {};
 

@@ -45,7 +45,7 @@ const updateAllImages = async () => {
     let totalActualizados = 0;
 
     // Actualizar productos de MUJER
-    console.log('👗 PERFUMES MUJER:');
+    console.log('👗 perfumesmujer:');
     for (const [marcaDB, carpeta] of Object.entries(marcasMujer)) {
       const productos = await Product.find({ 
         marca: marcaDB,
@@ -54,7 +54,7 @@ const updateAllImages = async () => {
       
       if (productos.length === 0) continue;
       
-      const rutaCarpeta = path.join(__dirname, '../frontend/perfumes mujer', carpeta);
+      const rutaCarpeta = path.join(__dirname, '../frontend/perfumesmujer', carpeta);
       
       if (fs.existsSync(rutaCarpeta)) {
         const imagenes = fs.readdirSync(rutaCarpeta).filter(f => 
@@ -65,7 +65,7 @@ const updateAllImages = async () => {
         
         for (let i = 0; i < productos.length; i++) {
           const indiceImagen = i % imagenes.length;
-          const rutaImagen = `perfumes mujer/${carpeta}/${imagenes[indiceImagen]}`;
+          const rutaImagen = `perfumesmujer/${carpeta}/${imagenes[indiceImagen]}`;
           
           await Product.updateOne(
             { _id: productos[i]._id },
@@ -80,7 +80,7 @@ const updateAllImages = async () => {
     }
 
     // Actualizar productos de HOMBRE
-    console.log('\n👔 PERFUMES HOMBRE:');
+    console.log('\n👔 perfumeshombre:');
     for (const [marcaDB, carpeta] of Object.entries(marcasHombre)) {
       const productos = await Product.find({ 
         marca: marcaDB,
@@ -89,7 +89,7 @@ const updateAllImages = async () => {
       
       if (productos.length === 0) continue;
       
-      const rutaCarpeta = path.join(__dirname, '../frontend/perfumes hombre', carpeta);
+      const rutaCarpeta = path.join(__dirname, '../frontend/perfumeshombre', carpeta);
       
       if (fs.existsSync(rutaCarpeta)) {
         const imagenes = fs.readdirSync(rutaCarpeta).filter(f => 
@@ -100,7 +100,7 @@ const updateAllImages = async () => {
         
         for (let i = 0; i < productos.length; i++) {
           const indiceImagen = i % imagenes.length;
-          const rutaImagen = `perfumes hombre/${carpeta}/${imagenes[indiceImagen]}`;
+          const rutaImagen = `perfumeshombre/${carpeta}/${imagenes[indiceImagen]}`;
           
           await Product.updateOne(
             { _id: productos[i]._id },

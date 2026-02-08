@@ -9,7 +9,7 @@ const Product = require('./models/Product');
     
     // Actualizar Ralph Lauren
     const products = await Product.find({ marca: 'Ralph Lauren' });
-    const brandPath = path.join(__dirname, '../frontend/perfumes hombre/RalphLauren');
+    const brandPath = path.join(__dirname, '../frontend/perfumeshombre/RalphLauren');
     
     if (fs.existsSync(brandPath)) {
       const images = fs.readdirSync(brandPath).filter(f => f.endsWith('.png'));
@@ -17,7 +17,7 @@ const Product = require('./models/Product');
       
       for (let i = 0; i < products.length; i++) {
         const imageIndex = i % images.length;
-        const imagePath = `perfumes hombre/RalphLauren/${images[imageIndex]}`;
+        const imagePath = `perfumeshombre/RalphLauren/${images[imageIndex]}`;
         await Product.updateOne({ _id: products[i]._id }, { imagen: imagePath });
       }
       console.log(`✅ Ralph Lauren actualizado: ${products.length} productos`);
