@@ -30,8 +30,8 @@ router.get('/', async (req, res) => {
   const baseUrl = process.env.BACKEND_URL || 'https://sofishop-21.onrender.com';
   const normalizeImage = (img) => {
     if (!img) return img;
-    if (img.startsWith('http://localhost:3000')) return img.replace('http://localhost:3000', baseUrl);
-    if (img.startsWith('https://localhost:3000')) return img.replace('https://localhost:3000', baseUrl);
+    if (img.startsWith('https://sofishop-21.onrender.com')) return img.replace('https://sofishop-21.onrender.com', baseUrl);
+    if (img.startsWith('https://sofishop-21.onrender.com')) return img.replace('https://sofishop-21.onrender.com', baseUrl);
     if (img.startsWith('http')) return img;
     if (!img.includes('/')) return `${baseUrl}/uploads/${img}`;
     return `${baseUrl}/${encodeURI(img)}`;
