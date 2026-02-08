@@ -6,7 +6,7 @@
   
   "paginas_frontend": {
     "login": {
-      "ruta": "http://localhost:3000/login.html",
+      "ruta": "https://sofishop-20.onrender.com/login.html",
       "descripcion": "Página de inicio de sesión",
       "funcionalidad": [
         "Ingresar email y contraseña",
@@ -15,7 +15,7 @@
       ]
     },
     "register": {
-      "ruta": "http://localhost:3000/register.html",
+      "ruta": "https://sofishop-20.onrender.com/register.html",
       "descripcion": "Página de registro de usuario",
       "funcionalidad": [
         "Crear nueva cuenta",
@@ -24,7 +24,7 @@
       ]
     },
     "forgot_password": {
-      "ruta": "http://localhost:3000/forgot-password.html",
+      "ruta": "https://sofishop-20.onrender.com/forgot-password.html",
       "descripcion": "Solicitar recuperación de contraseña",
       "funcionalidad": [
         "Ingresar email registrado",
@@ -33,7 +33,7 @@
       ]
     },
     "reset_password": {
-      "ruta": "http://localhost:3000/reset-password.html?token=xxxxx",
+      "ruta": "https://sofishop-20.onrender.com/reset-password.html?token=xxxxx",
       "descripcion": "Restablecer contraseña",
       "funcionalidad": [
         "Validar token de recuperación",
@@ -42,7 +42,7 @@
       ]
     },
     "verify_email": {
-      "ruta": "http://localhost:3000/verify-email.html?token=xxxxx",
+      "ruta": "https://sofishop-20.onrender.com/verify-email.html?token=xxxxx",
       "descripcion": "Verificar email de usuario",
       "funcionalidad": [
         "Validar token automáticamente",
@@ -51,7 +51,7 @@
       ]
     },
     "test": {
-      "ruta": "http://localhost:3000/test-recuperacion.html",
+      "ruta": "https://sofishop-20.onrender.com/test-recuperacion.html",
       "descripcion": "Página de pruebas del sistema",
       "funcionalidad": [
         "Probar envío de emails",
@@ -62,7 +62,7 @@
   },
 
   "endpoints_api": {
-    "auth_base": "http://localhost:3000/api/auth",
+    "auth_base": "https://sofishop-20.onrender.com/api/auth",
     
     "register": {
       "metodo": "POST",
@@ -234,7 +234,7 @@
     "variables": {
       "EMAIL_USER": "compras.sofishop@gmail.com",
       "EMAIL_PASSWORD": "esyz ffcc hhsv ugss (app password, no contraseña regular)",
-      "SERVER_URL": "http://localhost:3000"
+      "SERVER_URL": "https://sofishop-20.onrender.com"
     },
     "plantillas": {
       "recuperacion": {
@@ -331,7 +331,7 @@
   ],
 
   "testing": {
-    "url_pruebas": "http://localhost:3000/test-recuperacion.html",
+    "url_pruebas": "https://sofishop-20.onrender.com/test-recuperacion.html",
     "permite": [
       "Probar envío de emails",
       "Acceso a todas las páginas",

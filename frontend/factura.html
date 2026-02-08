@@ -730,7 +730,7 @@
       fecha: pedido.fecha
     };
     
-    fetch('http://localhost:3000/api/orders', {
+    fetch('https://sofishop-20.onrender.com/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)

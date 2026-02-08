@@ -1,6 +1,6 @@
 // Configuración global de la aplicación
 const API_URL = window.location.hostname === 'localhost' 
-  ? 'http://localhost:3000' 
+  ? 'https://sofishop-20.onrender.com' 
   : 'https://sofishop-21.onrender.com';
 
 // Función para obtener URL correcta de imagen (manejando espacios)

@@ -777,7 +777,7 @@
 
     try {
       // Intentar obtener del backend
-      const response = await fetch(`http://localhost:3000/api/orders/usuario/${encodeURIComponent(email)}`);
+      const response = await fetch(`https://sofishop-20.onrender.com/api/orders/usuario/${encodeURIComponent(email)}`);
       
       if (response.ok) {
         const pedidosBackend = await response.json();
