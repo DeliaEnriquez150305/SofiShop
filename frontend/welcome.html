@@ -1150,6 +1150,13 @@
 
   <div class="hero-carousel">
     <div class="hero-slide active" id="heroSlide0"></div>
+    <div class="hero-slide" id="heroSlide1"></div>
+    <div class="hero-slide" id="heroSlide2"></div>
+    <div class="carousel-dots" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 5;">
+      <button class="hero-dot active" onclick="cambiarHeroSlide(0)" style="width: 12px; height: 12px; border-radius: 50%; border: none; background: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.3s;"></button>
+      <button class="hero-dot" onclick="cambiarHeroSlide(1)" style="width: 12px; height: 12px; border-radius: 50%; border: none; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s;"></button>
+      <button class="hero-dot" onclick="cambiarHeroSlide(2)" style="width: 12px; height: 12px; border-radius: 50%; border: none; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s;"></button>
+    </div>
   </div>
 </div>
 
@@ -1223,6 +1230,8 @@
   // Variables del carrusel del hero
   let currentHeroSlide = 0;
   const heroImages = [
+    'imagen/CARRUSEL2.png',
+    'imagen/CARRUSEL2.png',
     'imagen/CARRUSEL2.png'
   ];
 
