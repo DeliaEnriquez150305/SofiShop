@@ -48,8 +48,10 @@ router.post('/register', async (req, res) => {
     
     await user.save();
 
-    // Enviar correo de verificación
-    await enviarCorreoVerificacion(email, nombre, verificationToken);
+    // Enviar correo de verificación EN BACKGROUND (sin esperar)
+    enviarCorreoVerificacion(email, nombre, verificationToken).catch(err => 
+      console.error('No se pudo enviar correo de verificación:', err.message)
+    );
 
     res.json({ 
       mensaje: 'Usuario registrado correctamente. Por favor verifica tu correo para activar tu cuenta.',
