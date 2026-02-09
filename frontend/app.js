@@ -1,4 +1,4 @@
-fetch('https://sofishop-20.onrender.com/api/products')
+fetch('https://sofishop-9.onrender.com/api/products')
   .then(res => res.json())
   .then(data => {
     const div = document.getElementById('productos');

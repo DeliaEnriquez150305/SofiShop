@@ -1,5 +1,5 @@
 // Configuración global de la aplicación
-const API_URL = 'https://sofishop-20.onrender.com';
+const API_URL = 'https://sofishop-9.onrender.com';
 
 // Función para obtener URL correcta de imagen (manejando espacios)
 function getImageUrl(imagePath) {

@@ -14,7 +14,7 @@
             try {
                 // Step 1: Login
                 statusDiv.innerHTML += '<p>Intentando login...</p>';
-                const loginRes = await fetch('https://sofishop-20.onrender.com/api/auth/login', {
+                const loginRes = await fetch('https://sofishop-9.onrender.com/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -31,7 +31,7 @@
                     
                     // Step 2: Fetch products
                     statusDiv.innerHTML += '<p>Cargando productos...</p>';
-                    const prodRes = await fetch('https://sofishop-20.onrender.com/api/products?categoria=perfumes');
+                    const prodRes = await fetch('https://sofishop-9.onrender.com/api/products?categoria=perfumes');
                     const products = await prodRes.json();
                     
                     statusDiv.innerHTML += `<p>✅ Productos cargados: ${products.length}</p>`;

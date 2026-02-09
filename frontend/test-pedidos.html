@@ -113,7 +113,7 @@
 
     async function verTodosPedidos() {
       try {
-        const response = await fetch('https://sofishop-20.onrender.com/api/orders');
+        const response = await fetch('https://sofishop-9.onrender.com/api/orders');
         const pedidos = await response.json();
         document.getElementById('backend-todos').innerHTML = 
           `<span class="success">Total: ${pedidos.length} pedidos en backend</span>\n` +
@@ -135,7 +135,7 @@
       }
 
       try {
-        const response = await fetch(`https://sofishop-20.onrender.com/api/orders/usuario/${encodeURIComponent(email)}`);
+        const response = await fetch(`https://sofishop-9.onrender.com/api/orders/usuario/${encodeURIComponent(email)}`);
         const pedidos = await response.json();
         document.getElementById('backend-usuario').innerHTML = 
           `<span class="success">Email: ${email}</span>\n` +
@@ -165,7 +165,7 @@
       };
 
       try {
-        const response = await fetch('https://sofishop-20.onrender.com/api/orders', {
+        const response = await fetch('https://sofishop-9.onrender.com/api/orders', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(pedidoPrueba)
@@ -198,7 +198,7 @@
       }
 
       try {
-        const response = await fetch('https://sofishop-20.onrender.com/api/orders/actualizar-email', {
+        const response = await fetch('https://sofishop-9.onrender.com/api/orders/actualizar-email', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

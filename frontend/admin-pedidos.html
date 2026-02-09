@@ -321,7 +321,7 @@ body {
 async function obtenerPedidos(){
   try {
     console.log('🔄 Obteniendo pedidos desde API...');
-    const response = await fetch('https://sofishop-20.onrender.com/api/orders');
+    const response = await fetch('https://sofishop-9.onrender.com/api/orders');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -330,7 +330,7 @@ async function obtenerPedidos(){
     return pedidos;
   } catch (error) {
     console.error('❌ Error obteniendo pedidos:', error);
-    alert('Error al conectar con el servidor. Verifica que el backend esté corriendo en https://sofishop-20.onrender.com');
+    alert('Error al conectar con el servidor. Verifica que el backend esté corriendo en https://sofishop-9.onrender.com');
     return [];
   }
 }
@@ -449,7 +449,7 @@ async function actualizarBadgePedidos() {
   
   (async () => {
     try {
-      const response = await fetch('https://sofishop-20.onrender.com/api/orders');
+      const response = await fetch('https://sofishop-9.onrender.com/api/orders');
       if (!response.ok) throw new Error('Error');
       const pedidos = await response.json();
       const pendientes = pedidos.filter(p => (p.estado || '').toLowerCase() === 'pendiente').length;
@@ -472,7 +472,7 @@ async function cambiarEstado(orderId, nuevoEstado){
   }
 
   try {
-    const response = await fetch(`https://sofishop-20.onrender.com/api/orders/estado/${orderId}`, {
+    const response = await fetch(`https://sofishop-9.onrender.com/api/orders/estado/${orderId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ estado: nuevoEstado })

@@ -470,7 +470,7 @@
         const cantidad = item.cantidad || 1;
         const subtotal = precio * cantidad;
         total += subtotal;
-        const imagenSrc = item.imagen ? (item.imagen.startsWith('http') ? item.imagen : `https://sofishop-20.onrender.com/${item.imagen}`) : 'https://via.placeholder.com/200x200?text=Producto';
+        const imagenSrc = item.imagen ? (item.imagen.startsWith('http') ? item.imagen : `https://sofishop-9.onrender.com/${item.imagen}`) : 'https://via.placeholder.com/200x200?text=Producto';
         div.innerHTML += `
           <div class="cart-item" style="display: grid; grid-template-columns: 80px 1fr auto; gap: 15px; align-items: center; padding: 15px; background: white; border-radius: 12px; border: 1px solid #e0e0e0;">
             <img src="${imagenSrc}" alt="${item.nombre}" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; background: #f5f5f5; padding: 5px;">
@@ -548,7 +548,7 @@
         total: total.toFixed(2)
       };
       
-      fetch('https://sofishop-20.onrender.com/api/orders', {
+      fetch('https://sofishop-9.onrender.com/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(order)
@@ -593,7 +593,7 @@
       };
 
       try {
-        const res = await fetch('https://sofishop-20.onrender.com/api/orders', {
+        const res = await fetch('https://sofishop-9.onrender.com/api/orders', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(order)
