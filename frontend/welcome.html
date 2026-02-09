@@ -6,6 +6,7 @@
   <title>Bienvenida - SofiShop</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="preload" href="https://sofishop-9.onrender.com/imagen/CARRUSEL2.png" as="image">
   <style>
     :root {
       --primary: #20B997;
@@ -1235,24 +1236,19 @@
 
   // Inicializar carrusel del hero
   function inicializarHeroCarrusel() {
+    // Aplicar imagen inmediatamente sin esperar
     heroImages.forEach((img, index) => {
       const slide = document.getElementById(`heroSlide${index}`);
-      slide.style.backgroundImage = `url('${img}')`;
+      if (slide) {
+        slide.style.backgroundImage = `url('${img}')`;
+      }
     });
-    iniciarAutoPlayHero();
   }
 
-  // Auto-cambiar slides del hero
-  function iniciarAutoPlayHero() {
-    setInterval(() => {
-      cambiarHeroSlide((currentHeroSlide + 1) % heroImages.length);
-    }, 5000); // Cambiar cada 5 segundos
-  }
-
-  // Cambiar slide del hero
+  // Cambiar slide del hero (función simplificada)
   function cambiarHeroSlide(index) {
-  const slides = document.querySelectorAll('.hero-slide');
-  const dots = document.querySelectorAll('.hero-dot');
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.hero-dot');
 
   // 🛑 Protección: si no hay slides, no hacer nada
   if (slides.length === 0) return;
