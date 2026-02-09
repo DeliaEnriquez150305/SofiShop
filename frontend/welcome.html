@@ -1332,32 +1332,6 @@
     console.error('Error cargando carrusel:', error);
   }
 }
-    
-    // Crear slides
-    productos.forEach(producto => {
-      const slide = document.createElement('div');
-      slide.className = 'carousel-slide';
-      const imagenUrl = producto.imagen 
-        ? (producto.imagen.startsWith('http') ? producto.imagen : API_URL + '/' + producto.imagen)
-        : 'https://via.placeholder.com/300x300?text=' + encodeURIComponent(producto.nombre || 'Perfume');
-      slide.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-          <img src="${imagenUrl}" alt="${producto.nombre}" title="${producto.nombre}" onerror="this.src='https://via.placeholder.com/300x300?text=Perfume'" style="max-width: 100%; max-height: 250px; object-fit: contain;">
-          <p style="font-size: 0.9em; color: var(--text); text-align: center; margin: 0; font-weight: 600;">${producto.nombre}</p>
-          <p style="font-size: 1.1em; color: var(--primary); font-weight: 800; margin: 0;">$${producto.precio}</p>
-        </div>
-      `;
-      track.appendChild(slide);
-    });
-    
-    // Crear dots
-    productos.forEach((_, index) => {
-      const dot = document.createElement('div');
-      dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
-      dot.onclick = () => irAlSlide(index, genero);
-      dotsContainer.appendChild(dot);
-    });
-  
 
   function cambiarSlideHombre(direccion) {
     const track = document.getElementById('carouselTrackHombre');
