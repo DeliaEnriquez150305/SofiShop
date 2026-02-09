@@ -304,14 +304,14 @@ const initializeDatabase = async () => {
       console.log('\n🖼️ Mapeando imágenes reales...');
       
       const marcasMujer = {
-        'Carolina Herrera': 'Carolina Herrera',
-        'Katty Perry': 'Katty Perry',
-        'Ariana Grande': 'Ariana Grande',
-        'Britney Spears': 'Britney Spears',
-        'Calvin Klein': 'Calvin Klein',
-        'Hugo Boss': 'Hugo Boss',
-        'Paco Rabanne': 'Paco Rabanne',
-        'Paris Hilton': 'Paris Hilton',
+        'Carolina Herrera': 'CarolinaHerrera',
+        'Katty Perry': 'KattyPerry',
+        'Ariana Grande': 'ArianaGrande',
+        'Britney Spears': 'BritneySpears',
+        'Calvin Klein': 'CalvinKlein',
+        'Hugo Boss': 'HugoBoss',
+        'Paco Rabanne': 'PacoRabanne',
+        'Paris Hilton': 'ParisHilton',
         'Afnan': 'Afnan'
       };
 
