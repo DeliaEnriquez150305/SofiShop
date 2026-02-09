@@ -36,6 +36,11 @@ const initializeDatabase = async () => {
     // Verificar si hay productos sin subcategoría (bug anterior)
     const productossinSub = await Product.countDocuments({ subcategoria: { $exists: false } });
     
+    // Verificar si hay productos con rutas de imagen con espacios (URLs viejas)
+    const productosConEspacios = await Product.countDocuments({ 
+      imagen: /perfumes (hombre|mujer)/ 
+    });
+    
     const adminEmail = 'compras.sofishop@gmail.com';
     // Ensure only the main admin remains admin
     await User.updateMany(
@@ -44,8 +49,8 @@ const initializeDatabase = async () => {
     );
     const adminUser = await User.findOne({ email: adminEmail });
 
-    if (productCount === 0 || userCount === 0 || productossinSub > 0) {
-      console.log('📊 Base de datos vacía, inicializando...');
+    if (productCount === 0 || userCount === 0 || productossinSub > 0 || productosConEspacios > 0) {
+      console.log('📊 Base de datos vacía o desactualizada, inicializando...');
       
       // Limpiar
       await User.deleteMany({});
