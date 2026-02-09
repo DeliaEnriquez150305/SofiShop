@@ -289,7 +289,7 @@ const initializeDatabase = async () => {
               descripcion: `Perfume ${perfume.nombre} de ${brand}`,
               categoria: 'perfumes',
               stock: 10,
-              imagen: `perfumes ${gender}/${brand}/${perfume.nombre}.jpg`
+              imagen: `perfumes${gender}/${brand}/${perfume.nombre}.png`
             });
             count++;
           }
