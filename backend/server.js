@@ -432,6 +432,9 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Servir la carpeta de uploads para imágenes de productos
 app.use('/uploads', express.static(path.join(__dirname, '../frontend/uploads')));
 
+// Servir carpeta de imágenes del carousel
+app.use('/imagen', express.static(path.join(__dirname, '../frontend/imagen')));
+
 // Servir carpetas de perfumes (sin espacios en el nombre)
 app.use('/perfumesmujer', express.static(path.join(__dirname, '../frontend/perfumesmujer')));
 app.use('/perfumeshombre', express.static(path.join(__dirname, '../frontend/perfumeshombre')));
