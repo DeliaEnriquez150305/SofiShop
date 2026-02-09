@@ -369,7 +369,7 @@
 
     async function cargarInventario() {
       try {
-        const res = await fetch('https://sofishop-12.onrender.com/api/products');
+        const res = await fetch('https://sofishop-20.onrender.com/api/products');
         productos = await res.json();
         productosOriginales = JSON.parse(JSON.stringify(productos));
         
@@ -408,7 +408,7 @@
         const stockStatus = p.stock <= 10 ? 'low' : p.stock <= 50 ? 'medium' : 'high';
         const stockLabel = p.stock <= 10 ? 'Bajo' : p.stock <= 50 ? 'Medio' : 'Alto';
         const valorTotal = (p.precio * p.stock).toFixed(2);
-        const imagenUrl = p.imagen ? (p.imagen.startsWith('http') ? p.imagen : `https://sofishop-9.onrender.com/${p.imagen}`) : 'https://via.placeholder.com/50';
+        const imagenUrl = p.imagen ? (p.imagen.startsWith('http') ? p.imagen : `https://sofishop-20.onrender.com/${p.imagen}`) : 'https://via.placeholder.com/50';
 
         return `
           <tr data-id="${p._id}">
@@ -451,7 +451,7 @@
       }
 
       try {
-        const res = await fetch(`https://sofishop-9.onrender.com/api/products/${id}`, {
+        const res = await fetch(`https://sofishop-20.onrender.com/api/products/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ stock: nuevoStock })
