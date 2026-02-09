@@ -27,14 +27,12 @@ router.get('/', async (req, res) => {
     query.categoria = categoria;
   }
   const products = await Product.find(query);
-  const baseUrl = process.env.BACKEND_URL || 'https://sofishop-21.onrender.com';
+  const baseUrl = process.env.BACKEND_URL || 'https://sofishop-20.onrender.com';
   const normalizeImage = (img) => {
     if (!img) return img;
-    if (img.startsWith('https://sofishop-21.onrender.com')) return img.replace('https://sofishop-21.onrender.com', baseUrl);
-    if (img.startsWith('https://sofishop-21.onrender.com')) return img.replace('https://sofishop-21.onrender.com', baseUrl);
     if (img.startsWith('http')) return img;
     if (!img.includes('/')) return `${baseUrl}/uploads/${img}`;
-    return `${baseUrl}/${encodeURI(img)}`;
+    return `${baseUrl}/${img}`;
   };
   const normalized = products.map(p => ({
     ...p.toObject(),

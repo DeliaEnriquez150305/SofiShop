@@ -415,9 +415,9 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Servir la carpeta de uploads para imágenes de productos
 app.use('/uploads', express.static(path.join(__dirname, '../frontend/uploads')));
 
-// Servir carpetas de perfumes (con espacios en el nombre)
-app.use('/perfumes-mujer', express.static(path.join(__dirname, '../frontend/perfumesmujer')));
-app.use('/perfumes-hombre', express.static(path.join(__dirname, '../frontend/perfumeshombre')));
+// Servir carpetas de perfumes (sin espacios en el nombre)
+app.use('/perfumesmujer', express.static(path.join(__dirname, '../frontend/perfumesmujer')));
+app.use('/perfumeshombre', express.static(path.join(__dirname, '../frontend/perfumeshombre')));
 
 // ============================================
 // RUTA RAÍZ
