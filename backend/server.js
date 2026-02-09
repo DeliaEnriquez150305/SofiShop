@@ -396,6 +396,18 @@ setTimeout(initializeDatabase, 2000);
 // CORS: Permitir peticiones desde cualquier origen
 app.use(cors());
 
+// CORS headers para imágenes y assets
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Parser JSON: Permite leer datos JSON en el body de las peticiones
 app.use(express.json());
 
