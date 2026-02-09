@@ -1297,41 +1297,11 @@
   let currentSlideHombre = 0;
   let currentSlideMujer = 0;
 
-  async function inicializarCarrusel() {
-  try {
-    const res = await fetch(API_URL + '/api/products?categoria=perfumes');
-    const productos = await res.json();
-
-    const productosFiltrados = productos.filter(p =>
-      (p.subcategoria || '').toLowerCase() === generoSeleccionado.toLowerCase()
-    );
-
-    carouselItems = productosFiltrados.slice(0, 5);
-
-    const carouselSection = document.querySelector('.carousel-section');
-    const track = document.querySelector('.carousel-track');
-
-    // 🛑 PROTECCIÓN CRÍTICA
-    if (!carouselSection || !track) {
-      console.warn('⚠️ Carrusel no existe en esta página');
-      return;
-    }
-
-    if (carouselItems.length === 0) {
-      carouselSection.style.display = 'none';
-      return;
-    }
-
-    carouselSection.style.display = 'block';
-
-    renderCarouselSlides();
-    renderCarouselDots();
-    startAutoPlay();
-
-  } catch (error) {
-    console.error('Error cargando carrusel:', error);
+  function inicializarCarrusel(productos, genero) {
+    // Esta función ya no es necesaria en welcome.html
+    // Los carouseles de productos se eliminaron de esta página
+    return;
   }
-}
 
   function cambiarSlideHombre(direccion) {
     const track = document.getElementById('carouselTrackHombre');
